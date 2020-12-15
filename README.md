@@ -13,3 +13,12 @@ Liste des fonctionnalités :
   - Synchroniser la partition avec un chronomètre (BPM à définir au début). Nécessite de reconnaître le nombre de mesure par page
   - Jouer la partition par un instrument. Compliqué s'il s'agit d'une image
   - Organiser les partitions par favoris (Système de notation à 5 étoiles)
+
+INSTALL DEV
+git submodule init
+git submodule update
+
+FOR LINUX
+libfreetype6+-dev
+libvorbis-dev
+libflac++-dev

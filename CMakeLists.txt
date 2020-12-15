@@ -1,19 +1,16 @@
 cmake_minimum_required (VERSION 3.0)
-project (Whatever)
+project (LiseuseFabriJoly)
 
-# CONFIG COMPILATION
-if (MSVC)
-    # warning level 4 and all warnings as errors
-    add_compile_options(/W4 /WX)
-else()
-    # lots of warnings and all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
+add_subdirectory(external/SFML)
 
-file(GLOB_RECURSE WHATEVER_FILES
-  include/whatever/*
-  src/*
+file(GLOB_RECURSE SRC_FILES
+  SRC/*
   )
 
-include_directories(include)
-add_executable(whatever ${WHATEVER_FILES})
+include_directories(SRC)
+
+add_executable(cbr ${SRC_FILES})
+
+target_link_libraries(cbr sfml-window sfml-graphics)
+
+target_include_directories(cbr SYSTEM PUBLIC external/SFML/include)
