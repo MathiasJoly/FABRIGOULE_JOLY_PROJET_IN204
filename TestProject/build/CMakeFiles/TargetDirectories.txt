@@ -1,0 +1,3 @@
+/home/mathias/TestProject/build/CMakeFiles/rebuild_cache.dir
+/home/mathias/TestProject/build/CMakeFiles/TestProject.dir
+/home/mathias/TestProject/build/CMakeFiles/edit_cache.dir
