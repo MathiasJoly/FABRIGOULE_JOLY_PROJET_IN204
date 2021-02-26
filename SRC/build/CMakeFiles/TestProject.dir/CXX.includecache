@@ -6,33 +6,33 @@
 
 #IncludeRegexTransform: 
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseApp.cpp
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.cpp
 LiseuseApp.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseApp.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.h
 LiseuseFrame.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseFrame.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseFrame.h
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseApp.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.h
 wx/wxprec.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/wx/wxprec.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/wx/wxprec.h
 wx/wx.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/wx/wx.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/wx/wx.h
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseFrame.cpp
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseFrame.cpp
 LiseuseFrame.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseFrame.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseFrame.h
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseFrame.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseFrame.h
 LiseuseApp.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseApp.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.h
 LiseusePanel.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseusePanel.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseusePanel.h
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseusePanel.cpp
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseusePanel.cpp
 LiseusePanel.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseusePanel.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseusePanel.h
 
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseusePanel.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseusePanel.h
 wx/image.h
 -
 wx/file.h
@@ -40,7 +40,7 @@ wx/file.h
 wx/bitmap.h
 -
 LiseuseApp.h
-/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/TestProject/LiseuseApp.h
+/home/mathias/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.h
 
 /usr/include/wx-3.0/wx/accel.h
 wx/defs.h

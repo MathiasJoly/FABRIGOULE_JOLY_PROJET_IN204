@@ -14,7 +14,12 @@ enum
     ID_LOAD,
     ID_SAVE,
     ID_PROCESS,
-    ID_BEST_SIZE
+    ID_BEST_SIZE,
+    ID_OPEN = 1,
+    ID_OPEN_RECENT = 1,
+    ID_SYNC_SETTING = 1,
+    ID_ZOOM = 1,
+    ID_DISPLAY = 1
 };
 
 class LiseusePanel: public wxPanel

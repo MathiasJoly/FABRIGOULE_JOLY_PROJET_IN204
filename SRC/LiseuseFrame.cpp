@@ -4,12 +4,16 @@
 #include "LiseuseFrame.h"
 
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
+	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpen)
 	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
 	EVT_MENU(ID_PROCESS,  LiseuseFrame::OnProcessImage)
-	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
         EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
         EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
+	EVT_MENU(ID_SYNC_SETTING, LiseuseFrame::OnSyncSetting)
+	EVT_MENU(ID_ZOOM, LiseuseFrame::OnZoom)
+	EVT_MENU(ID_DISPLAY, LiseuseFrame::OnDisplay)
+	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -17,19 +21,39 @@ END_EVENT_TABLE()
 LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
-	wxMenu *file_menu = new wxMenu();
-	file_menu->Append(ID_LOAD, _T("&Open image..."));
-	file_menu->Append(ID_PROCESS, _T("&Process image"));
-	file_menu->Append(ID_SAVE, _T("&Save image as..."));
-	file_menu->Append(ID_BEST_SIZE, _T("&Best size"));
-	file_menu->AppendSeparator();
-	file_menu->Append(ID_ABOUT, _T("&About..."));
-	file_menu->AppendSeparator();
-	file_menu->Append(ID_QUIT, _T("&Exit"));
+	wxMenu *menuFile = new wxMenu();
+	menuFile->Append(ID_OPEN, _T("&Open Sheet\tCtrl-O"), _T("Browse folders"));
 
+	wxMenu *OpenRecent = new wxMenu();
+    	OpenRecent->Append(ID_OPEN, _T("Sheet1"));
+    	OpenRecent->Append(ID_OPEN, _T("&Sheet2"));
+	menuFile->AppendSubMenu(OpenRecent, "&Open Recent Sheet");
+	OpenRecent->Append(ID_OPEN, "Sheet3");
+    	menuFile->AppendSeparator();
+	menuFile->Append(ID_LOAD, _T("&Open image..."));
+	menuFile->Append(ID_PROCESS, _T("&Process image"));
+	menuFile->Append(ID_SAVE, _T("&Save image as..."));
+	menuFile->AppendSeparator();
+    	menuFile->Append(ID_SYNC_SETTING, "&Sync Setting");
+    	menuFile->AppendSeparator();
+	menuFile->Append(ID_QUIT, _T("&Exit"));
+
+	wxMenu *menuHelp = new wxMenu();
+	menuHelp->Append(ID_ABOUT, _T("&About..."));
+
+	wxMenu *menuView = new wxMenu();
+	menuView->Append(ID_ZOOM, "&Zoom");
+	menuView->AppendSeparator();
+	menuView->Append(ID_DISPLAY, "&Display");
+	menuView->Append(ID_BEST_SIZE, _T("&Best size"));
+	
 	wxMenuBar *menuBar = new wxMenuBar();
-	menuBar->Append(file_menu, _T("&File"));
+	menuBar->Append(menuFile, _T("&File"));
+	menuBar->Append(menuHelp, _T("&Help"));
+	menuBar->Append(menuView, _T("&View"));
 	SetMenuBar( menuBar );
+	CreateStatusBar();
+	SetStatusText(_T("Welcome to wxWidgets"));
 
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
@@ -87,6 +111,26 @@ void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))
 {
     panel->BestSize() ;
+}
+
+void LiseuseFrame::OnOpen(wxCommandEvent& event)
+{
+    wxLogMessage("Hello world from wxWidgets!");
+}
+
+void LiseuseFrame::OnSyncSetting(wxCommandEvent& event)
+{
+    wxLogMessage("You can set the tempo and the number of bar for each page !");
+}
+
+void LiseuseFrame::OnZoom(wxCommandEvent& event)
+{
+    wxLogMessage("You'll be able to change zoom");
+}
+
+void LiseuseFrame::OnDisplay(wxCommandEvent& event)
+{
+    wxLogMessage("You can set the number of page and how to scroll !");
 }
 
 #endif

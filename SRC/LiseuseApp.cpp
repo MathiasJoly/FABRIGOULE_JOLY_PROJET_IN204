@@ -13,6 +13,8 @@ bool LiseuseApp::OnInit()
     LiseuseFrame* frame = new LiseuseFrame(_T(APP_NAME), wxDefaultPosition, wxSize(400,300)) ;
     frame->Show(true) ;
     SetTopWindow(frame) ;
+//    wxDisplay display(wxDisplay::GetFromWindow(pointertoyourframe));
+//    wxRect screen = display.GetClientArea();
     return true ;
 }
 
