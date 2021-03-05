@@ -1,5 +1,8 @@
 build
 
+# CMake
+CMakeCache.txt
+
 # Prerequisites
 *.d
 
