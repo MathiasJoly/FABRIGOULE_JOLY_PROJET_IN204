@@ -2,15 +2,20 @@
 #define _LISEUSEPANEL_CPP_
 
 #include "LiseusePanel.h"
+#include <wx/scrolwin.h>
 
 BEGIN_EVENT_TABLE(LiseusePanel, wxPanel)
 	EVT_PAINT(LiseusePanel::OnPaint)
 END_EVENT_TABLE()
 
-LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxPanel( parent, id, pos, size, wxSUNKEN_BORDER)
+LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): 
+	wxScrolled<wxPanel>( parent, id, pos, size, wxHSCROLL)
 {
 	myImage=NULL;
 	imageRGB = NULL ;
+	this->SetScrollRate(20,20);
+	this->SetScrollbar(wxHORIZONTAL,0,imageWidth,2*imageWidth,false);
+	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_NEVER);
 }
 
 LiseusePanel::~LiseusePanel()
@@ -96,6 +101,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		delete(tempImage) ;		// buffer not needed any more
 
 		dc.DrawBitmap(imageBitmap, 0, 0) ;
+		dc.DrawBitmap(imageBitmap, imageWidth+10, 0) ;
 		
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);

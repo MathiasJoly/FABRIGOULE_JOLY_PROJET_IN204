@@ -2,6 +2,7 @@
 #define _LISEUSEFRAME_CPP_
 
 #include "LiseuseFrame.h"
+#include <wx/filedlg.h>
 
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpen)
