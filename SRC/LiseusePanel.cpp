@@ -8,13 +8,13 @@ BEGIN_EVENT_TABLE(LiseusePanel, wxPanel)
 	EVT_PAINT(LiseusePanel::OnPaint)
 END_EVENT_TABLE()
 
-LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): 
+LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ):
 	wxScrolled<wxPanel>( parent, id, pos, size, wxHSCROLL)
 {
 	myImage=NULL;
 	imageRGB = NULL ;
 	this->SetScrollRate(20,20);
-	this->SetScrollbar(wxHORIZONTAL,0,imageWidth,2*imageWidth,false);
+	this->SetScrollbars(20,20,100,100,true);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_NEVER);
 }
 
@@ -34,7 +34,7 @@ void LiseusePanel::LoadImage(wxString fileName)
 		delete imageRGB ;
 
 	// open image dialog box
-	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1); 
+	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
 	imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 
@@ -56,7 +56,7 @@ void LiseusePanel::SaveImage(wxString fileName)
 {
 	bool b ;
 
-	wxImage* tempImage = new wxImage(imageWidth, imageHeight, myImage, true); 
+	wxImage* tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
 	// lend my image buffer...
 	b = tempImage->SaveFile(fileName) ;
 	delete(tempImage) ;		// buffer not needed any more
@@ -95,25 +95,19 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	if (myImage)
 	{
-		tempImage = new wxImage(imageWidth, imageHeight, myImage, true); 
+		tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
 		// lend my image buffer...
 		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
 		delete(tempImage) ;		// buffer not needed any more
 
 		dc.DrawBitmap(imageBitmap, 0, 0) ;
 		dc.DrawBitmap(imageBitmap, imageWidth+10, 0) ;
-		
+
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);
 		wxString text("Test Annotation");
-		dc.DrawText(text,80,5);		
+		dc.DrawText(text,80,5);
 	};
 }
 
 #endif
-
-
-
-
-
-
