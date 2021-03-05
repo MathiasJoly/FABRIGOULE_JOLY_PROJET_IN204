@@ -8,6 +8,7 @@ class LiseuseFrame: public wxFrame
 {
 public:
 	LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+	LiseusePanel *panel; // the canvas inside the main frame
 
 protected:
 	void OnQuit(wxCommandEvent& event);
@@ -22,7 +23,6 @@ protected:
 	void OnProcessImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnClose(wxCloseEvent& event) ;
 
-        LiseusePanel *panel; // the canvas inside the main frame
 	bool imageLoaded ;
 	DECLARE_EVENT_TABLE()
 };

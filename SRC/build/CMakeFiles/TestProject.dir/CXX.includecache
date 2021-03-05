@@ -39,6 +39,12 @@ wx/file.h
 -
 wx/bitmap.h
 -
+wx/scrolwin.h
+-
+wx/wx.h
+-
+wx/sizer.h
+-
 LiseuseApp.h
 /home/alexis/Documents/IN204/Projet Liseuse/FABRIGOULE_JOLY_PROJET_IN204/SRC/LiseuseApp.h
 

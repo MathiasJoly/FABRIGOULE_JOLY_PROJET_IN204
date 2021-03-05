@@ -46,7 +46,7 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuView->AppendSeparator();
 	menuView->Append(ID_DISPLAY, "&Display");
 	menuView->Append(ID_BEST_SIZE, _T("&Best size"));
-	
+
 	wxMenuBar *menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, _T("&File"));
 	menuBar->Append(menuHelp, _T("&Help"));

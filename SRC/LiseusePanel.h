@@ -4,6 +4,9 @@
 #include <wx/image.h>
 #include <wx/file.h>
 #include <wx/bitmap.h>
+#include <wx/scrolwin.h>
+#include <wx/wx.h>
+#include <wx/sizer.h>
 
 #include "LiseuseApp.h"
 
@@ -22,7 +25,7 @@ enum
     ID_DISPLAY = 1
 };
 
-class LiseusePanel: public wxPanel
+class LiseusePanel: public wxScrolled<wxPanel>
 {
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
