@@ -13,7 +13,7 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	myImage=NULL;
 	imageRGB = NULL;
 //	this->SetScrollRate(20,20);
-	this->SetScrollbars(1,1,50,50);
+	this->SetScrollbars(1,1,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 }
 
@@ -105,8 +105,9 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
 		delete(tempImage) ;		// buffer not needed any more
 
-		dc.Clear();
-    dc.DrawBitmap(imageBitmap, 0, 0, false);
+//		dc.Clear();
+		dc.DrawBitmap(imageBitmap, 0, 0);
+		dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
 
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);
