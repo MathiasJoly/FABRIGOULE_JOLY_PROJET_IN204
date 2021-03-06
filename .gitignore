@@ -1,7 +1,6 @@
-build
 
 # CMake
-CMakeCache.txt
+SRC/build/
 
 # Prerequisites
 *.d
