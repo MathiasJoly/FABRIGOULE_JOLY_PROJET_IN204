@@ -35,14 +35,13 @@ class LiseusePanel: public wxScrolled<wxPanel>
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
-	void LoadImage(wxString fileName) ;
+	wxImage* LoadImage(wxString fileName) ;
 	void SaveImage(wxString fileName) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 	wxPoint *cursor;
-  unsigned int nbPage;
 
 private:
 	int imageWidth ;

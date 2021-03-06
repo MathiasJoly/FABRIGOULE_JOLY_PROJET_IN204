@@ -25,7 +25,7 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
-void LiseusePanel::LoadImage(wxString fileName)
+wxImage* LiseusePanel::LoadImage(wxString fileName)
 {
 	if (imageRGB)
 		delete imageRGB ;
@@ -41,7 +41,7 @@ void LiseusePanel::LoadImage(wxString fileName)
 
 	imageRGB->Rescale(imageWidth, imageHeight, wxIMAGE_QUALITY_BICUBIC);
 
-	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
+//	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
 
 // update GUI size
 	SetSize(imageWidth, imageHeight) ;
@@ -49,6 +49,7 @@ void LiseusePanel::LoadImage(wxString fileName)
 
 // update display
 	Refresh(false) ;
+	return imageRGB;
 }
 
 void LiseusePanel::SaveImage(wxString fileName)
