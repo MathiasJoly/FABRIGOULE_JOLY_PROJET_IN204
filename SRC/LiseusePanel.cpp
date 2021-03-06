@@ -65,6 +65,16 @@ void LiseusePanel::SaveImage(wxString fileName)
 		wxMessageBox(wxT("A problem occured during saving"));
 }
 
+void LiseusePanel::PrintPDF(wxString fileName,wxString mimeType)
+{
+	/*
+	wxFileTypeInfo ftInfo = new wxFileTypeInfo(mimeType);
+	wxFileType ft = new wxFileType(ftInfo);
+	wxString* command = new wxString();
+	bool succes = ft.GetPrintCommand(command,
+	*/
+}
+
 void LiseusePanel::BestSize()
 {
 	SetSize(imageWidth, imageHeight) ;	// ideal size for canvas

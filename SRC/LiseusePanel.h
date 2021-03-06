@@ -12,6 +12,8 @@
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
+#include <wx/mimetype.h>
+#include <wx/utils.h>
 
 #include "LiseuseApp.h"
 
@@ -27,7 +29,8 @@ enum
     ID_OPEN_RECENT = 9,
     ID_SYNC_SETTING = 10,
     ID_ZOOM = 11,
-    ID_DISPLAY = 12
+    ID_DISPLAY = 12,
+    ID_PDF = 13,
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>
@@ -37,6 +40,7 @@ public:
     ~LiseusePanel() ;
 	void LoadImage(wxString fileName) ;
 	void SaveImage(wxString fileName) ;
+	void PrintPDF(wxString fileName,wxString mimeType) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void Undo(wxImage copie);
