@@ -11,6 +11,7 @@
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
+#include <wx/font.h>
 
 #include "LiseuseApp.h"
 
@@ -38,6 +39,7 @@ public:
 	void SaveImage(wxString fileName) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
+	void Undo(wxImage copie);
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 	wxPoint *cursor;

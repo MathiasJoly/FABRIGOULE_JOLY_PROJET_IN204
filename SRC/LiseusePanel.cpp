@@ -95,10 +95,10 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 void LiseusePanel::OnClick(wxMouseEvent& event)
 {
-	if (imageRGB) event.Skip();
 	if (!event.RightUp()) event.Skip();
-	else
+	else if (imageRGB)
 	{
+		wxImage copieRGB = imageRGB->Copy();
 		*cursor = event.GetPosition();
 		wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
 		if ( dlg.ShowModal() == wxID_OK )
@@ -106,6 +106,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 			// We can be certain that this string contains letters only.
 			wxString value = dlg.GetValue();
 			Annoter(value,*cursor);
+			Undo(copieRGB);
 		};
 	};
 }
@@ -114,6 +115,22 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 {
         event.Skip();
 } 
+
+void LiseusePanel::Undo(wxImage copie)
+{
+	wxTextEntryDialog dlg(this,_T("Cette annotation vous convient-elle ?"),_T("Verification :"));
+	if ( dlg.ShowModal() == wxID_OK )
+	{
+		wxString reponse = dlg.GetValue();
+		bool convenable = reponse.IsSameAs("OUI") | reponse.IsSameAs("Oui") | reponse.IsSameAs("oui") | reponse.IsSameAs("O") | reponse.IsSameAs("o") |
+					reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ; 
+		if ( !convenable )
+		{
+			*imageRGB = copie;
+			Refresh();
+		};
+	};
+}
 
 void LiseusePanel::Annoter(wxString note, wxPoint pt)
 {
@@ -126,13 +143,16 @@ void LiseusePanel::Annoter(wxString note, wxPoint pt)
 		wxMemoryDC mdc(imageBitmap);
 		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
+		wxFont* font = new wxFont(wxFontInfo(6));
+		mdc.SetFont(*font);
+
 		mdc.DrawBitmap(imageBitmap, 0, 0);
 
-		mdc.DrawText(note,pt.x,pt.y);
+		mdc.DrawText(note,pt.x-5,pt.y-8);
 
 		*imageRGB = imageBitmap.ConvertToImage();
 
-		this->Refresh();
+		Refresh();
 	};
 }
 
