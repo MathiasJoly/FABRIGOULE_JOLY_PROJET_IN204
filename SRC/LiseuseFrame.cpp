@@ -74,7 +74,7 @@ void LiseuseFrame::OnClose(wxCloseEvent& event)
 
 void LiseuseFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox( _T("How to \n\n- load\n- display\n- process\n- save\n\nan image with wxWidgets (2.8.7)\n\nPascal Bertolino - GIPSA-lab, Grenoble - France\npascal.bertolino@gipsa-lab.fr"),
+    wxMessageBox( _T("Pour Annoter faites un clic droit"),
                   _T(APP_NAME), wxOK | wxICON_INFORMATION ) ;
 }
 

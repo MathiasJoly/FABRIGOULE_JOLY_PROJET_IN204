@@ -6,6 +6,8 @@
 
 BEGIN_EVENT_TABLE(LiseusePanel, wxPanel)
 	EVT_PAINT(LiseusePanel::OnPaint)
+	EVT_MOUSE_EVENTS(LiseusePanel::OnClick)
+	EVT_MOUSE_CAPTURE_LOST(LiseusePanel::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>(parent, id)
@@ -15,6 +17,7 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 //	this->SetScrollRate(20,20);
 	this->SetScrollbars(20,20,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
+	cursor = new wxPoint(0,0);
 }
 
 LiseusePanel::~LiseusePanel()
@@ -95,7 +98,55 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	wxPaintDC dc(this);
 	DoPrepareDC(dc); // le scroll ne déforme plus l'image
 
-//	this->Refresh();
+	//this->Refresh();
+	//this->Update();
+
+	if (myImage)
+	{
+		tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
+		// lend my image buffer...
+		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
+		delete(tempImage) ;		// buffer not needed any more
+
+//		dc.Clear();
+		dc.DrawBitmap(imageBitmap, 0, 0);
+		//dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
+
+		//dc.SelectObject(imageBitmap);
+		//dc.SetTextForeground(255,255,0);
+		//wxString text("Test Annotation");
+		//dc.DrawText(text,80,5);
+
+	};
+}
+
+void LiseusePanel::OnClick(wxMouseEvent& event)
+{
+	if (myImage) event.Skip();
+	if (!event.RightUp()) event.Skip();
+	else
+	{
+		*cursor = event.GetPosition();
+		wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
+		if ( dlg.ShowModal() == wxID_OK )
+		{
+			// We can be certain that this string contains letters only.
+			wxString value = dlg.GetValue();
+			Annoter(value,*cursor);
+		};
+	};
+}
+
+void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
+{
+        event.Skip();
+} 
+
+void LiseusePanel::Annoter(wxString note, wxPoint pt)
+{
+	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
+
+	//this->Refresh();
 	//this->Update();
 
 	if (myImage)
@@ -108,22 +159,16 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		wxMemoryDC mdc(imageBitmap);
 		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
-//		dc.Clear();
-		dc.DrawBitmap(imageBitmap, 0, 0);
 		mdc.DrawBitmap(imageBitmap, 0, 0);
-		dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
 
-		//dc.SelectObject(imageBitmap);
-		//dc.SetTextForeground(255,255,0);
-		wxString text("Test Annotation");
-		dc.DrawText(text,80,5);
-		mdc.DrawText(text,80,5);
+		mdc.DrawText(note,pt.x,pt.y);
 
 		*imageRGB = imageBitmap.ConvertToImage();
 		memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
-		//imageWidth = imageWidth;
 
+		this->Refresh();
 	};
 }
+
 
 #endif

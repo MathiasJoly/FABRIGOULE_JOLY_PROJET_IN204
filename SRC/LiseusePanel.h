@@ -9,22 +9,25 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/dcmemory.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
 
 #include "LiseuseApp.h"
 
 enum
 {
     ID_QUIT = 1,
-    ID_ABOUT,
-    ID_LOAD,
-    ID_SAVE,
-    ID_PROCESS,
-    ID_BEST_SIZE,
-    ID_OPEN = 1,
-    ID_OPEN_RECENT = 1,
-    ID_SYNC_SETTING = 1,
-    ID_ZOOM = 1,
-    ID_DISPLAY = 1
+    ID_ABOUT = 2,
+    ID_LOAD = 3,
+    ID_NOTE = 4,
+    ID_SAVE = 5,
+    ID_PROCESS = 6,
+    ID_BEST_SIZE = 7,
+    ID_OPEN = 8,
+    ID_OPEN_RECENT = 9,
+    ID_SYNC_SETTING = 10,
+    ID_ZOOM = 11,
+    ID_DISPLAY = 12
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>
@@ -36,6 +39,10 @@ public:
 	void SaveImage(wxString fileName) ;
 	void ProcessImage() ;
 	void BestSize() ;
+	void Annoter(wxString note, wxPoint pt) ;
+	void OnClick(wxMouseEvent& event) ;
+	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+	wxPoint *cursor;
 
 private:
 	int imageWidth ;
