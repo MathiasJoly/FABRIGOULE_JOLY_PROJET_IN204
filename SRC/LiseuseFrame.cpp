@@ -7,7 +7,6 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpen)
 	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
-	EVT_MENU(ID_PROCESS,  LiseuseFrame::OnProcessImage)
         EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
         EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_SYNC_SETTING, LiseuseFrame::OnSyncSetting)
@@ -31,7 +30,6 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	OpenRecent->Append(ID_OPEN, "Sheet3");
     	menuFile->AppendSeparator();
 	menuFile->Append(ID_LOAD, _T("&Open image..."));
-	menuFile->Append(ID_PROCESS, _T("&Process image"));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
 	menuFile->AppendSeparator();
     	menuFile->Append(ID_SYNC_SETTING, "&Sync Setting");
@@ -76,12 +74,6 @@ void LiseuseFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxMessageBox( _T("Pour Annoter faites un clic droit"),
                   _T(APP_NAME), wxOK | wxICON_INFORMATION ) ;
-}
-
-void LiseuseFrame::OnProcessImage(wxCommandEvent& WXUNUSED(event))
-{
-	if (imageLoaded)
-	    panel->ProcessImage() ;
 }
 
 void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )

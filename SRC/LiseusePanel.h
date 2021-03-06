@@ -21,7 +21,6 @@ enum
     ID_LOAD = 3,
     ID_NOTE = 4,
     ID_SAVE = 5,
-    ID_PROCESS = 6,
     ID_BEST_SIZE = 7,
     ID_OPEN = 8,
     ID_OPEN_RECENT = 9,
@@ -37,7 +36,6 @@ public:
     ~LiseusePanel() ;
 	void LoadImage(wxString fileName) ;
 	void SaveImage(wxString fileName) ;
-	void ProcessImage() ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void OnClick(wxMouseEvent& event) ;
@@ -49,7 +47,6 @@ private:
 	int imageHeight ;
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
-	unsigned char* myImage ;	// used to process the image
 
 	void OnPaint(wxPaintEvent &event) ;
 

@@ -12,7 +12,6 @@ END_EVENT_TABLE()
 
 LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>(parent, id)
 {
-	myImage=NULL;
 	imageRGB = NULL;
 //	this->SetScrollRate(20,20);
 	this->SetScrollbars(20,20,100,100);
@@ -22,32 +21,24 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 
 LiseusePanel::~LiseusePanel()
 {
-	if (myImage)
-		free(myImage) ;
 	if (imageRGB)
 		delete imageRGB ;
 }
 
 void LiseusePanel::LoadImage(wxString fileName)
 {
-	if (myImage)
-		free (myImage) ;
 	if (imageRGB)
 		delete imageRGB ;
 
 	// open image dialog box
 	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
-	imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 
 	imageWidth = imageRGB->GetWidth() ;
 	imageHeight = imageRGB->GetHeight() ;
 
 
 	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
-
-	myImage = (unsigned char*)malloc(imageWidth * imageHeight * 3) ;
-	memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
 
 // update GUI size
 	SetSize(imageWidth, imageHeight) ;
@@ -61,27 +52,17 @@ void LiseusePanel::SaveImage(wxString fileName)
 {
 	bool b ;
 
+	unsigned char* myImage = (unsigned char*)malloc(imageWidth * imageHeight * 3) ;
+	memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
+
 	wxImage* tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
 	// lend my image buffer...
 	b = tempImage->SaveFile(fileName) ;
 	delete(tempImage) ;		// buffer not needed any more
+	free(myImage);
 
 	if(!b)
 		wxMessageBox(wxT("A problem occured during saving"));
-}
-
-void LiseusePanel::ProcessImage()
-// example of fast and trivial process (negative)
-// you can replace it with your own
-// you can also use methods from the wxImage class itself
-{
-	long int i = imageWidth*imageHeight*3 ;
-
-// myImage is a monodimentional vector of pixels (RGBRGB...)
-	while (i--)
-		myImage[i] = 255 - myImage[i] ;
-
-	Refresh(false); // update display
 }
 
 void LiseusePanel::BestSize()
@@ -93,20 +74,14 @@ void LiseusePanel::BestSize()
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 // update the main window content
 {
-	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
 
 	wxPaintDC dc(this);
 	DoPrepareDC(dc); // le scroll ne déforme plus l'image
 
-	//this->Refresh();
-	//this->Update();
-
-	if (myImage)
+	if (imageRGB)
 	{
-		tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
-		// lend my image buffer...
-		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
-		delete(tempImage) ;		// buffer not needed any more
+
+		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 
 //		dc.Clear();
 		dc.DrawBitmap(imageBitmap, 0, 0);
@@ -114,15 +89,13 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);
-		//wxString text("Test Annotation");
-		//dc.DrawText(text,80,5);
 
 	};
 }
 
 void LiseusePanel::OnClick(wxMouseEvent& event)
 {
-	if (myImage) event.Skip();
+	if (imageRGB) event.Skip();
 	if (!event.RightUp()) event.Skip();
 	else
 	{
@@ -144,17 +117,11 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 
 void LiseusePanel::Annoter(wxString note, wxPoint pt)
 {
-	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
 
-	//this->Refresh();
-	//this->Update();
-
-	if (myImage)
+	if (imageRGB)
 	{
-		tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
-		// lend my image buffer...
-		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
-		delete(tempImage) ;		// buffer not needed any more
+
+		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 	
 		wxMemoryDC mdc(imageBitmap);
 		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
@@ -164,7 +131,6 @@ void LiseusePanel::Annoter(wxString note, wxPoint pt)
 		mdc.DrawText(note,pt.x,pt.y);
 
 		*imageRGB = imageBitmap.ConvertToImage();
-		memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
 
 		this->Refresh();
 	};
