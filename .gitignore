@@ -1,6 +1,10 @@
+SRC/build/
 
 # CMake
-SRC/build/
+CMakeFiles
+SRC/build/CMakeFiles
+SRC/build/CMakeFiles/
+build/CMakeFiles
 
 # Prerequisites
 *.d
