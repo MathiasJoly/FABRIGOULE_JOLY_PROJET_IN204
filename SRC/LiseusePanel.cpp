@@ -91,7 +91,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
 
 	wxPaintDC dc(this);
-
+	DoPrepareDC(dc);
 
 	if (myImage)
 	{
