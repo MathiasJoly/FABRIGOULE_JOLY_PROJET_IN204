@@ -42,6 +42,7 @@ public:
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 	wxPoint *cursor;
+  unsigned int nbPage;
 
 private:
 	int imageWidth ;
