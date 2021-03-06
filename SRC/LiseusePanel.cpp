@@ -8,13 +8,13 @@ BEGIN_EVENT_TABLE(LiseusePanel, wxPanel)
 	EVT_PAINT(LiseusePanel::OnPaint)
 END_EVENT_TABLE()
 
-LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>( parent, id, pos, size, wxSUNKEN_BORDER)
+LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>(parent, id)
 {
 	myImage=NULL;
 	imageRGB = NULL;
-	this->SetScrollRate(20,20);
-//	this->SetScrollbars(20,20,50,50);
-	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_NEVER);
+//	this->SetScrollRate(20,20);
+	this->SetScrollbars(1,1,50,50);
+	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 }
 
 LiseusePanel::~LiseusePanel()
@@ -39,6 +39,9 @@ void LiseusePanel::LoadImage(wxString fileName)
 
 	imageWidth = imageRGB->GetWidth() ;
 	imageHeight = imageRGB->GetHeight() ;
+
+
+	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
 
 	myImage = (unsigned char*)malloc(imageWidth * imageHeight * 3) ;
 	memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
@@ -90,7 +93,10 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
 
 	wxPaintDC dc(this);
+	DoPrepareDC(dc);
 
+//	this->Refresh();
+	//this->Update();
 
 	if (myImage)
 	{
