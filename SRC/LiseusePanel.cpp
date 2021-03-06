@@ -33,10 +33,13 @@ void LiseusePanel::LoadImage(wxString fileName)
 	// open image dialog box
 	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
+	std::cout << imageRGB->GetWidth() << " " << imageRGB->GetHeight();
+//	imageWidth = imageRGB->GetWidth();
+//	imageHeight = imageRGB->GetHeight();
+	imageWidth = 657;
+	imageHeight = 850;
 
-	imageWidth = imageRGB->GetWidth() ;
-	imageHeight = imageRGB->GetHeight() ;
-
+	imageRGB->Rescale(imageWidth, imageHeight, wxIMAGE_QUALITY_BICUBIC);
 
 	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
 
@@ -124,7 +127,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 {
         event.Skip();
-} 
+}
 
 void LiseusePanel::Undo(wxImage copie)
 {
@@ -149,7 +152,7 @@ void LiseusePanel::Annoter(wxString note, wxPoint pt)
 	{
 
 		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
-	
+
 		wxMemoryDC mdc(imageBitmap);
 		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
