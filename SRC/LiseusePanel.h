@@ -11,6 +11,10 @@
 #include <wx/dcmemory.h>
 
 #include "LiseuseApp.h"
+#include <list>
+#include <cstdlib>
+#include <cstdio>
+#include <vector>
 
 enum
 {
@@ -30,9 +34,9 @@ enum
 class LiseusePanel: public wxScrolled<wxPanel>
 {
 public:
-    LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
-    ~LiseusePanel() ;
-	void LoadImage(wxString fileName) ;
+  LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
+  ~LiseusePanel() ;
+	void LoadImages(wxArrayString filesPaths) ;
 	void SaveImage(wxString fileName) ;
 	void ProcessImage() ;
 	void BestSize() ;
@@ -40,9 +44,17 @@ public:
 private:
 	int imageWidth ;
 	int imageHeight ;
+  int pageWidth ;
+	int pageHeight ;
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
 	unsigned char* myImage ;	// used to process the image
+
+  std::list<wxBitmap> imagesBitmap ;		// used to display the image
+	std::list<wxImage> *imagesRGB ;		// used to load the image
+	std::vector<unsigned char*> myImages;	// used to process the image
+  unsigned int nbPage;
+
 
 	void OnPaint(wxPaintEvent &event) ;
 

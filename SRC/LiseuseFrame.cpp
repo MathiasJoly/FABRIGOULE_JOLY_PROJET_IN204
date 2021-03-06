@@ -88,10 +88,25 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 {
 	wxBitmap bitmap;
 
-	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
+	wxFileDialog openFileDialog(this, _("Open .jpg files"), "", "",
+									 "All files (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
+									 if (openFileDialog.ShowModal() == wxID_CANCEL)
+									 		return; // the user changed idea...
+
+	 // proceed loading the file chosen by the user;
+   // this can be done with e.g. wxWidgets input streams:
+
+//   wxFileInputStream paths(openFileDialog.GetPaths());
+	 //printf(input_stream);
+	 openFileDialog.GetPaths(filesPaths);
+
+	 wxString filename = filesPaths.Last();
+//	 filename = paths.Last();
+
+//	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
 	if ( !filename.empty() )
 	{
-		panel->LoadImage(filename) ;
+		panel->LoadImages(filesPaths);
 		imageLoaded = true ;
 	}
 }

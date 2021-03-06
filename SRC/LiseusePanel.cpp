@@ -10,9 +10,18 @@ END_EVENT_TABLE()
 
 LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>(parent, id)
 {
+  nbPage = 0;
 	myImage=NULL;
 	imageRGB = NULL;
+  pageWidth = 800;
+  pageHeight = 950;
+  std::list<wxBitmap> imagesBitmap = {};
+  std::list<wxImage> imagesRGB = {};
+  myImages = {};
 //	this->SetScrollRate(20,20);
+  SetSize(1300, 1000);
+	GetParent()->SetClientSize(GetSize()) ;
+
 	this->SetScrollbars(20,20,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 }
@@ -25,30 +34,45 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
-void LiseusePanel::LoadImage(wxString fileName)
+void LiseusePanel::LoadImages(wxArrayString filesPaths)
 {
 	if (myImage)
 		free (myImage) ;
 	if (imageRGB)
 		delete imageRGB ;
 
+  nbPage = filesPaths.GetCount();
+  std::cout << "nbPage = " << nbPage << "\n";
+
 	// open image dialog box
-	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
-	// ANY => can load many image formats
-	imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
+  for (int i=0; i < nbPage; i++) {
+    std::cout << "enter for loop in LoadImages. i = " << i << "\n";
+    wxString fileName = filesPaths.Item(i);
+    imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
+    imageRGB->Rescale(pageWidth, pageHeight);
+  	// ANY => can load many image formats
+  	imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 
-	imageWidth = imageRGB->GetWidth() ;
-	imageHeight = imageRGB->GetHeight() ;
+    imagesRGB->resize(nbPage);
+//    imagesRGB->push_back(*imageRGB);
+    std::cout << "test" << "\n";
+    imagesBitmap.push_back(imageBitmap);
 
+  	imageWidth = imageRGB->GetWidth();
+  	imageHeight = imageRGB->GetHeight();
+    std::cout << imageWidth << "\n";
+    myImage = (unsigned char*)malloc(pageWidth * pageHeight * 3);
+    memcpy(myImage, imageRGB->GetData(), pageWidth * pageHeight * 3) ;
+    myImages.push_back(myImage);
+    std::cout << "myImages is of size : " << myImages.size() << "\n";
+  }
 
-	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
-
-	myImage = (unsigned char*)malloc(imageWidth * imageHeight * 3) ;
-	memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
 
 // update GUI size
-	SetSize(imageWidth, imageHeight) ;
-	GetParent()->SetClientSize(GetSize()) ;
+//	SetSize(1500, 1000);
+//	GetParent()->SetClientSize(GetSize()) ;
+
+  this->SetScrollbars(1,1,pageWidth*2,pageHeight,0,0);
 
 // update display
 	Refresh(false) ;
@@ -95,29 +119,33 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	wxPaintDC dc(this);
 	DoPrepareDC(dc); // le scroll ne déforme plus l'image
 
-//	this->Refresh();
-	//this->Update();
-
+  std::cout << "OnPaint is called" << "\n";
 	if (myImage)
 	{
-		tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
-		// lend my image buffer...
-		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
-		delete(tempImage) ;		// buffer not needed any more
-	
+    for (int i=0; i < nbPage; i++) {
+      tempImage = new wxImage(imageWidth, imageHeight, myImages.at(1), true);
+  		// lend my image buffer...
+  		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
+  		delete(tempImage) ;		// buffer not needed any more
+      dc.DrawBitmap(imageBitmap, i*(imageWidth+10), 0);
+    }
+
+
 		wxMemoryDC mdc(imageBitmap);
-		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
+//		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
 //		dc.Clear();
-		dc.DrawBitmap(imageBitmap, 0, 0);
-		mdc.DrawBitmap(imageBitmap, 0, 0);
-		dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
+//    for (int i = 0, i < filesPaths.GetCount(), i++) {
+  //    dc.DrawBitmap(filesPaths.Item)
+    //}
+//		dc.DrawBitmap(imageBitmap, 0, 0);;
+//  	DoPrepareDC(dc);
+//		dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
 
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);
 		wxString text("Test Annotation");
 		dc.DrawText(text,80,5);
-		mdc.DrawText(text,80,5);
 
 		*imageRGB = imageBitmap.ConvertToImage();
 		memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
