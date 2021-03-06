@@ -7,6 +7,8 @@
 #include <wx/scrolwin.h>
 #include <wx/wx.h>
 #include <wx/sizer.h>
+#include <wx/panel.h>
+#include <wx/dcmemory.h>
 
 #include "LiseuseApp.h"
 

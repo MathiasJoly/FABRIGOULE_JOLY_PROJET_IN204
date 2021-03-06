@@ -13,7 +13,7 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	myImage=NULL;
 	imageRGB = NULL;
 //	this->SetScrollRate(20,20);
-	this->SetScrollbars(1,1,100,100);
+	this->SetScrollbars(20,20,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 }
 
@@ -93,7 +93,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	wxImage* tempImage;  // the bridge between my image buffer and the bitmap to display
 
 	wxPaintDC dc(this);
-	DoPrepareDC(dc);
+	DoPrepareDC(dc); // le scroll ne déforme plus l'image
 
 //	this->Refresh();
 	//this->Update();
@@ -104,15 +104,25 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		// lend my image buffer...
 		imageBitmap = wxBitmap(*tempImage, -1); // ...to get the corresponding bitmap
 		delete(tempImage) ;		// buffer not needed any more
+	
+		wxMemoryDC mdc(imageBitmap);
+		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
 //		dc.Clear();
 		dc.DrawBitmap(imageBitmap, 0, 0);
+		mdc.DrawBitmap(imageBitmap, 0, 0);
 		dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
 
 		//dc.SelectObject(imageBitmap);
 		//dc.SetTextForeground(255,255,0);
 		wxString text("Test Annotation");
 		dc.DrawText(text,80,5);
+		mdc.DrawText(text,80,5);
+
+		*imageRGB = imageBitmap.ConvertToImage();
+		memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
+		//imageWidth = imageWidth;
+
 	};
 }
 
