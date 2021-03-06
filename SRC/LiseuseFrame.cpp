@@ -56,6 +56,8 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
 	imageLoaded = false ;
+	pageWidth = 657;
+	pageHeight = 850;
 	Centre() ;
 }
 
@@ -99,10 +101,17 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 		{
 			tempImage = panel->LoadImage(filename);
 			pagesVector.at(i) = tempImage;
+			//update GUI
 			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+			panel->SetSize(pageWidth, pageHeight);
+			panel->GetParent()->SetClientSize(panel->GetSize());
+			// update display
+			panel->Refresh(false);
+
 			imageLoaded = true;
 		}
 	}
+	panel->LoadPagesVector(pagesVector);
 }
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {

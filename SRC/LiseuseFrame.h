@@ -12,15 +12,14 @@ public:
 	LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 	LiseusePanel *panel; // the canvas inside the main frame
 	wxArrayString filesPaths;
-	std::vector<wxImage*> pagesVector;
   unsigned int nbPages;
-	unsigned int pageWidth = 657;
-	unsigned int pageHeight = 850;
+	unsigned int pageWidth;
+	unsigned int pageHeight;
 
 
 protected:
 	void OnQuit(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
+  void OnAbout(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnSyncSetting(wxCommandEvent& event);
 	void OnZoom(wxCommandEvent& event);
@@ -30,7 +29,8 @@ protected:
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event)) ;
 	void OnProcessImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnClose(wxCloseEvent& event) ;
-	wxImage* tempImage;
+	wxImage tempImage;
+	std::vector<wxImage> pagesVector;
 
 	bool imageLoaded ;
 	DECLARE_EVENT_TABLE()

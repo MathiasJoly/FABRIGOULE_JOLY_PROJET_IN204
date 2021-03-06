@@ -25,31 +25,23 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
-wxImage* LiseusePanel::LoadImage(wxString fileName)
+wxImage LiseusePanel::LoadImage(wxString fileName)
 {
 	if (imageRGB)
-		delete imageRGB ;
+		delete imageRGB;
 
 	// open image dialog box
 	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
-	std::cout << imageRGB->GetWidth() << " " << imageRGB->GetHeight();
 //	imageWidth = imageRGB->GetWidth();
 //	imageHeight = imageRGB->GetHeight();
 	imageWidth = 657;
 	imageHeight = 850;
 
 	imageRGB->Rescale(imageWidth, imageHeight, wxIMAGE_QUALITY_BICUBIC);
+	wxImage tempImage = imageRGB->Copy();
 
-//	this->SetScrollbars(1,1,imageWidth,imageHeight,0,0);
-
-// update GUI size
-	SetSize(imageWidth, imageHeight) ;
-	GetParent()->SetClientSize(GetSize()) ;
-
-// update display
-	Refresh(false) ;
-	return imageRGB;
+	return tempImage;
 }
 
 void LiseusePanel::SaveImage(wxString fileName)
@@ -75,6 +67,10 @@ void LiseusePanel::BestSize()
 	GetParent()->SetClientSize(GetSize());	// force the main frame to show the whole canvas
 }
 
+void LiseusePanel::LoadPagesVector(std::vector<wxImage> vector) {
+	pagesVector = vector;
+}
+
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 // update the main window content
 {
@@ -84,15 +80,18 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	if (imageRGB)
 	{
+		std::cout << "imageRGB : " << imageRGB << " and pagesVector.at(0) : " << &(pagesVector.at(0))
+																					 << " and pagesVector.at(3) : "
+																					 << " and pagesVector.at(1) : " << &(pagesVector.at(1)) << "\n";
+		for (int i=0; i < pagesVector.size(); i++) {
+			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
 
-		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
-
-//		dc.Clear();
-		dc.DrawBitmap(imageBitmap, 0, 0);
+			dc.DrawBitmap(imageBitmap, i*(imageWidth+10), 0);
+		}
 		//dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
 
-		//dc.SelectObject(imageBitmap);
-		//dc.SetTextForeground(255,255,0);
+//		imageBitmap = wxBitmap(*(pagesVector.at(1)), -1);
+//		dc.DrawBitmap(imageBitmap, 0, 0);
 
 	};
 }
