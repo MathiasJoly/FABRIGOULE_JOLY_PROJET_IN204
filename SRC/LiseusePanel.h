@@ -11,6 +11,7 @@
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
+#include <wx/font.h>
 
 #include "LiseuseApp.h"
 

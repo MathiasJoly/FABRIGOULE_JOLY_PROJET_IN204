@@ -126,9 +126,12 @@ void LiseusePanel::Annoter(wxString note, wxPoint pt)
 		wxMemoryDC mdc(imageBitmap);
 		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
 
+		wxFont* font = new wxFont(wxFontInfo(6));
+		mdc.SetFont(*font);
+
 		mdc.DrawBitmap(imageBitmap, 0, 0);
 
-		mdc.DrawText(note,pt.x,pt.y);
+		mdc.DrawText(note,pt.x-5,pt.y-8);
 
 		*imageRGB = imageBitmap.ConvertToImage();
 
