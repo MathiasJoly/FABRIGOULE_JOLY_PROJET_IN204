@@ -109,16 +109,37 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 	if (!event.RightUp()) event.Skip();
 	else if (imageRGB)
 	{
-		wxImage copieRGB = imageRGB->Copy();
 		*cursor = event.GetPosition() + this->GetViewStart();
-		wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
-		if ( dlg.ShowModal() == wxID_OK )
+		int i = 0;
+		int a_x, a_y;  //coordonnées de début de l'annotation
+		int a_l;  //longueur de l'annotation
+		int marge_b, marge_h, marge_d, marge_g; //encadrement de l'annotation
+		int c_x = cursor->x;
+		int c_y = cursor->y;
+		bool undo = false;
+		while (i < annotations.size() && !undo)
 		{
-			// We can be certain that this string contains letters only.
-			wxString value = dlg.GetValue();
-			Annoter(value,*cursor);
-			Undo(copieRGB);
+			a_x = annotations.at(i).pt.x;
+			a_y = annotations.at(i).pt.y;
+			a_l = annotations.at(i).note.Length();
+			undo = (c_x >= a_x-10) && (c_x <= a_x + a_l*5) && (c_y >= a_y-15) && (c_y <= a_y+5);
+			i++;
+		}
+		if (undo) 
+		{
+			annotations.erase(annotations.begin() + i-1);	
+		}			
+		else 
+		{
+			wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
+			if ( dlg.ShowModal() == wxID_OK )
+			{
+				// We can be certain that this string contains letters only.
+				wxString value = dlg.GetValue();
+				Annoter(value,*cursor);
+			};
 		};
+		Refresh();
 	};
 }
 
