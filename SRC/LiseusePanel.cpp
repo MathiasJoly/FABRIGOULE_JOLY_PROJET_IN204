@@ -85,7 +85,7 @@ void LiseusePanel::SaveImage(wxString filePath)
 	for (int i=0; i < annotations.size(); i++)
 	{
 		// Afficher les annotations
-		mdc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
+		mdc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-3,annotations.at(i).pt.y-11);
 	};
 
 	wxImage tempImage = imageBitmap.ConvertToImage();
@@ -119,7 +119,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		}
 		for (int i=0; i < annotations.size(); i++) {
 			// Show annotations
-			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
+			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-3,annotations.at(i).pt.y-11);
 		};
 	};
 }
@@ -178,7 +178,7 @@ void LiseusePanel::OnRightClick(wxMouseEvent& event)
 			a_x = annotations.at(i).pt.x;
 			a_y = annotations.at(i).pt.y;
 			a_l = annotations.at(i).note.Length();
-			undo = (c_x >= a_x-10) && (c_x <= a_x + a_l*5) && (c_y >= a_y-15) && (c_y <= a_y+5);
+			undo = (c_x >= a_x-3) && (c_x <= a_x + a_l*5) && (c_y >= a_y-12) && (c_y <= a_y+3);
 			i++;
 		}
 		if (undo)
