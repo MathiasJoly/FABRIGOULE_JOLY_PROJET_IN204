@@ -42,21 +42,58 @@ enum
 struct Annotation {
   wxString note;
   wxPoint pt;
+};
 
+struct File {
+	wxString name;
+	wxString path;
+	unsigned int pageNumber;
 };
 
 struct Files {
-  wxArrayString names;
-  wxArrayString paths;
+	std::vector<File> vector;
 
-  wxString findPath(wxString fileName) {
-    for (int i=0; i<names.GetCount(); i++) {
-      if (fileName == names.Item(i))
-        return paths.Item(i);
-    }
-      std::cout << "No such a file in opened pages" << "\n";
-      return ("");
-  }
+	wxString FindName(int num) {
+	for (int i=0; i<vector.size(); i++) {
+		if (num == vector[i].pageNumber)
+		return vector[i].name;
+		}
+	return ("");
+	}
+
+	wxString FindPath(wxString fileName) {
+	for (int i=0; i<vector.size(); i++) {
+		if (fileName == vector[i].name)
+		return vector[i].path;
+		}
+	std::cout << "No such a file in opened pages" << "\n";
+	return ("");
+	}
+
+	void GetNames(wxArrayString* names) {
+	for (int i=0; i<vector.size(); i++) {
+		(*names).Add(vector[i].name);
+		std::cout << "check :" << vector[i].name << "\n";
+		};
+	}
+
+	wxArrayString GetPaths() {
+	wxArrayString paths = {};
+	for (int i=0; i<vector.size(); i++) {
+		paths.Add(vector[i].name);
+		};
+	return paths;
+	}
+
+	void SetPageNumber(wxString fileName, int num) {
+	bool succes = false;
+	for (int i=0; i<vector.size(); i++) {
+		succes = fileName == vector[i].name ;
+		if (succes) vector[i].pageNumber = num ;
+		};
+	if (!succes) std::cout << "No such a file in opened pages" << "\n";
+	}
+	
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>

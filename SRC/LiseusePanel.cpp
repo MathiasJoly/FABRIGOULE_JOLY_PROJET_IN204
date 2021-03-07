@@ -35,15 +35,13 @@ LiseusePanel::~LiseusePanel()
 void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
-	files.paths = {};
-	files.names = {};
+	files.vector.resize(nbPages);
+	for(unsigned int i=0; i<nbPages; i++) {
 
-	for(int i=0; i<nbPages; i++) {
 		wxString filePath = filesPaths.Item(i);
-		files.paths.push_back(filePath);
 		wxString fileName = filePath.AfterLast('/');
-		files.names.push_back(fileName);
-
+		File file = {.name = fileName, .path = filePath, .pageNumber = i};
+		files.vector.at(i) = file;
 		if ( !filePath.empty() ) {
 			if (imageRGB)
 				delete imageRGB;
@@ -68,7 +66,10 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 			Refresh(false);
 		}
 	}
-	pagesOrderList->SetStrings(files.names);
+	wxArrayString fileNames = {};
+	files.GetNames(&fileNames);
+	std::cout << "check : " << fileNames.GetCount() <<"\n";
+	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
 }
 
@@ -129,9 +130,9 @@ void LiseusePanel::UpdatePagesVector() {
 		nbPages = pagesArrayNew.GetCount();
 		for(int i=0; i<nbPages; i++) {
 			wxString fileName = pagesArrayNew.Item(i);
-			wxString filePath = files.findPath(fileName);
+			wxString filePath = files.FindPath(fileName);
 
-			if ( !fileName.empty() ) {
+			if ( !filePath.empty() ) {
 				if (imageRGB)
 					delete imageRGB;
 				// open image dialog box
