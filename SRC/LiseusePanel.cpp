@@ -32,8 +32,8 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
-void LiseusePanel::LoadImages(wxArrayString filesPaths) {
-	nbPages = filesPaths.GetCount();
+void LiseusePanel::LoadImages(wxArrayString filescursor) {
+	nbPages = filescursor.GetCount();
 	pagesVector.resize(nbPages);
 	files.paths = {};
 	files.names = {};
@@ -112,14 +112,15 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	dc.SetFont(*font);
 	if (imageRGB)
 	{
+		// Show pages
 		for (int i=0; i < nbPages; i++) {
-			// Show pages
 			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
 			dc.DrawBitmap(imageBitmap, i*(pageWidth), 0);
 		}
+		// Show annotations
 		for (int i=0; i < annotations.size(); i++) {
-			// Show annotations
-			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
+			Annotation annotation = annotations.at(i);
+			dc.DrawText(annotation.note,annotation.pt.x-5 + pageWidth*files.(annotation.pageNumber-1), annotation.pt.y-15);
 		};
 	};
 }
@@ -127,17 +128,20 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 void LiseusePanel::UpdatePagesVector() {
 	if (pagesArray != pagesArrayNew) {
 		nbPages = pagesArrayNew.GetCount();
-		for(int i=0; i<nbPages; i++) {
+		for(unsigned int i=0; i<nbPages; i++) {
 			wxString fileName = pagesArrayNew.Item(i);
 			wxString filePath = files.findPath(fileName);
+
+			if (i<nbPages-1 && fileName == pagesArray.Item(i+1)) {
+				ChangeAnnotationsPlacements(i);
+				files.ChangePagePosition(i);
+			}
 
 			if ( !fileName.empty() ) {
 				if (imageRGB)
 					delete imageRGB;
 				// open image dialog box
 				imageRGB = new wxImage(filePath, wxBITMAP_TYPE_ANY, -1);
-				imageWidth = imageRGB->GetWidth();
-				imageHeight = imageRGB->GetHeight();
 				imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
 				wxImage tempImage = imageRGB->Copy();
 				pagesVector.at(i) = tempImage;
@@ -151,6 +155,16 @@ void LiseusePanel::UpdatePagesVector() {
 			}
 		}
 	pagesArray = pagesArrayNew;
+	}
+}
+
+void LiseusePanel::ChangeAnnotationsPlacements(unsigned int pageNb) {
+	for (int i=0; i < annotations.size(); i++) {
+		Annotation annotation = annotations.at(i);
+		if (annotation.pageNumber == pageNb)
+			annotation.pageNumber = pageNb+1;
+		else if (annotation.pageNumber == pageNb+1)
+			annotation.pageNumber = pageNb;
 	}
 }
 
@@ -209,7 +223,8 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
 {
-	Annotation temp_annotation = {.note = myNote, .pt = myPt};
+	Annotation temp_annotation = {.note = myNote, .pt = myPt, .pageNumber = temp_annotation.pt->x / pageWidth};
+	temp_annotation.pt->x = temp_annotation.pt->x % pageWidth;
 	annotations.push_back(temp_annotation);
 }
 

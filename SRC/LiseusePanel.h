@@ -42,7 +42,9 @@ enum
 struct Annotation {
   wxString note;
   wxPoint pt;
+  unsigned int pageNumber;
 
+  void ChangePlacement
 };
 
 struct Files {
@@ -61,44 +63,43 @@ struct Files {
 
 class LiseusePanel: public wxScrolled<wxPanel>
 {
-public:
+  public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
-  void LoadImages(wxArrayString filesPaths);
-	void SaveImage(wxString filePath) ;
-	void BestSize() ;
-	void Annoter(wxString note, wxPoint pt) ;
-	void OnRightClick(wxMouseEvent& event);
-  void OnListboxLDown(wxMouseEvent& event);
-  void OnMouseDown(wxMouseEvent & event);
-	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-//	void LoadPagesVector(std::vector<wxImage> vector);
+    void LoadImages(wxArrayString filesPaths);
+  	void SaveImage(wxString filePath) ;
+  	void BestSize() ;
+  	void Annoter(wxString note, wxPoint pt) ;
+  	void OnRightClick(wxMouseEvent& event);
+    void OnListboxLDown(wxMouseEvent& event);
+    void OnMouseDown(wxMouseEvent & event);
+  	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+    void ChangeAnnotationsPlacements(unsigned int PageNumberEx, unsigned int PageNumberNew);
 
-	wxImage LoadImage(wxString fileName) ;
-	wxPoint *cursor;
-  std::vector<wxImage> pagesVector;
-  wxEditableListBox* pagesOrderList;
-  unsigned int nbPages;
-  unsigned int pageWidth;
-  unsigned int pageHeight;
-
-
-private:
-	int imageWidth ;
-	int imageHeight ;
-	wxBitmap imageBitmap ;		// used to display the image
-	wxImage *imageRGB ;		// used to load the image
-  std::vector<Annotation> annotations;
-  wxArrayString pagesArray;
-  wxArrayString pagesArrayNew;
-  Files files;
+  	wxPoint *cursor;
+    std::vector<wxImage> pagesVector;
+    wxEditableListBox* pagesOrderList;
+    unsigned int nbPages;
+    unsigned int pageWidth;
+    unsigned int pageHeight;
 
 
-  void UpdatePagesVector();
-	void OnPaint(wxPaintEvent &event);
-  void OnPaint();
+  private:
+  	int imageWidth ;
+  	int imageHeight ;
+  	wxBitmap imageBitmap ;		// used to display the image
+  	wxImage *imageRGB ;		// used to load the image
+    std::vector<Annotation> annotations;
+    wxArrayString pagesArray;
+    wxArrayString pagesArrayNew;
+    Files files;
 
-	DECLARE_EVENT_TABLE()
+
+    void UpdatePagesVector();
+  	void OnPaint(wxPaintEvent &event);
+    void OnPaint();
+
+  	DECLARE_EVENT_TABLE()
 };
 
 #endif
