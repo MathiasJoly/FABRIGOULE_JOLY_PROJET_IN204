@@ -25,7 +25,6 @@ protected:
 	void OnBestSize(wxCommandEvent& WXUNUSED(event)) ;
 	void OnOpenImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event)) ;
-	void OnProcessImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnClose(wxCloseEvent& event) ;
 
 	wxImage tempImage;

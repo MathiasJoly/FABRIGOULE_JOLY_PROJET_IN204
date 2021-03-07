@@ -1,4 +1,4 @@
-project(TestProject)
+project(MusicNotes)
 
 set(SOURCE_FILES
 	LiseuseApp.cpp

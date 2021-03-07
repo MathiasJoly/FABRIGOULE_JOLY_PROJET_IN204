@@ -65,15 +65,15 @@ public:
     ~LiseusePanel() ;
   void LoadImages(wxArrayString filesPaths);
 	void SaveImage(wxString filePath) ;
-	void PrintPDF(wxString filePath,wxString mimeType) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
-	void Undo(wxImage copie);
 	void OnRightClick(wxMouseEvent& event);
   void OnListboxLDown(wxMouseEvent& event);
   void OnMouseDown(wxMouseEvent & event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-  void LoadPagesVector(std::vector<wxImage> vector);
+	void LoadPagesVector(std::vector<wxImage> vector);
+
+	wxImage LoadImage(wxString fileName) ;
 	wxPoint *cursor;
   std::vector<wxImage> pagesVector;
   wxEditableListBox* pagesOrderList;
