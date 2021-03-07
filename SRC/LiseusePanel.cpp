@@ -13,10 +13,12 @@ END_EVENT_TABLE()
 LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, const wxSize &size ): wxScrolled<wxPanel>(parent, id)
 {
 	imageRGB = NULL;
+	annotations = {};
 //	this->SetScrollRate(20,20);
 	this->SetScrollbars(20,20,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 	cursor = new wxPoint(0,0);
+	annotations.resize(0);
 }
 
 LiseusePanel::~LiseusePanel()
@@ -90,21 +92,17 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	if (imageRGB)
 	{
-		std::cout << "imageRGB : " << imageRGB << " and pagesVector.at(0) : " << &(pagesVector.at(0))
-																					 << " and pagesVector.at(3) : "
-																					 << " and pagesVector.at(1) : " << &(pagesVector.at(1)) << "\n";
 		for (int i=0; i < pagesVector.size(); i++) {
 			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
 
 			dc.DrawBitmap(imageBitmap, i*(imageWidth+10), 0);
 		}
-		//dc.DrawBitmap(imageBitmap, imageWidth+10, 0);
-
-//		imageBitmap = wxBitmap(*(pagesVector.at(1)), -1);
-//		dc.DrawBitmap(imageBitmap, 0, 0);
-
-	};
+		for (int i=0; i < annotations.size(); i++) {
+			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-8);
+		}
+	}
 }
+
 
 void LiseusePanel::OnClick(wxMouseEvent& event)
 {
@@ -136,7 +134,7 @@ void LiseusePanel::Undo(wxImage copie)
 	{
 		wxString reponse = dlg.GetValue();
 		bool convenable = reponse.IsSameAs("OUI") | reponse.IsSameAs("Oui") | reponse.IsSameAs("oui") | reponse.IsSameAs("O") | reponse.IsSameAs("o") |
-					reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ; 
+					reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ;
 		if ( !convenable )
 		{
 			*imageRGB = copie;
@@ -145,12 +143,14 @@ void LiseusePanel::Undo(wxImage copie)
 	};
 }
 
-void LiseusePanel::Annoter(wxString note, wxPoint pt)
+void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
 {
+	std::cout<< "Annoter is called" << "\n";
+	Annotation temp_annotation = {.note = myNote, .pt = myPt};
+	annotations.push_back(temp_annotation);
+	std::cout<<"annotations list is of size : " << annotations.size() << "\n";
 
-	if (imageRGB)
-	{
-
+/*
 		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
 
 		wxMemoryDC mdc(imageBitmap);
@@ -164,9 +164,8 @@ void LiseusePanel::Annoter(wxString note, wxPoint pt)
 		mdc.DrawText(note,pt.x-5,pt.y-8);
 
 		*imageRGB = imageBitmap.ConvertToImage();
-
-		Refresh();
-	};
+*/
+		Refresh(false);
 }
 
 
