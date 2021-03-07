@@ -105,12 +105,12 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 	panel->pagesOrderList->SetStrings(filesPaths);
 
 	for(int i=0; i<nbPages; i++) {
-		wxString filename = filesPaths.Item(i);
+		wxString filePath = filesPaths.Item(i);
 
-	//	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
-		if ( !filename.empty() )
+	//	wxString filePath = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
+		if ( !filePath.empty() )
 		{
-			tempImage = panel->LoadImage(filename);
+			tempImage = panel->LoadImage(filePath);
 			pagesVector.at(i) = tempImage;
 			//update GUI
 			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
@@ -135,9 +135,9 @@ void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 	if (!imageLoaded)
 		return ;
 
-	wxString filename = wxFileSelector(_T("Save image as"),_T(""),_T(""),_T("*.bmp"), _T("BMP files (*.bmp)|*.bmp|GIF files (*gif)|*.gif|JPEG files (*jpg)|*.jpg|PNG files (*png)|*.png|TIFF files (*tif)|*.tif|XPM files (*xpm)|*.xpm|All files (*.*)|*.*"), wxFD_SAVE );
-	if ( !filename.empty() )
-		panel->SaveImage(filename) ;
+	wxString filePath = wxFileSelector(_T("Save image as"),_T(""),_T(""),_T("*.bmp"), _T("BMP files (*.bmp)|*.bmp|GIF files (*gif)|*.gif|JPEG files (*jpg)|*.jpg|PNG files (*png)|*.png|TIFF files (*tif)|*.tif|XPM files (*xpm)|*.xpm|All files (*.*)|*.*"), wxFD_SAVE );
+	if ( !filePath.empty() )
+		panel->SaveImage(filePath) ;
 }
 
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))

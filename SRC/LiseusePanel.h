@@ -43,14 +43,28 @@ struct Annotation {
   wxPoint pt;
 };
 
+struct Files {
+  wxArrayString names;
+  wxArrayString paths;
+
+  wxString findPath(wxString fileName) {
+    for (int i=0; i<names.GetCount(); i++) {
+      if (fileName == names.Item(i))
+        return paths.Item(i);
+    }
+      std::cout << "No such a file in opened pages" << "\n";
+      return ("");
+  }
+};
+
 class LiseusePanel: public wxScrolled<wxPanel>
 {
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
   void LoadImages(wxArrayString filesPaths);
-	void SaveImage(wxString fileName) ;
-	void PrintPDF(wxString fileName,wxString mimeType) ;
+	void SaveImage(wxString filePath) ;
+	void PrintPDF(wxString filePath,wxString mimeType) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void Undo(wxImage copie);
@@ -75,6 +89,7 @@ private:
   std::vector<Annotation> annotations;
   wxArrayString pagesArray;
   wxArrayString pagesArrayNew;
+  Files files;
 
 
   void UpdatePagesVector();

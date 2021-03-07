@@ -22,7 +22,7 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	annotations.resize(0);
 	pageWidth = 657;
 	pageHeight = 850;
-	wxSize pagesOrderListSize = wxSize(500,150);
+	wxSize pagesOrderListSize = wxSize(700,150);
 	wxPoint* pagesOrderListPos = new wxPoint(0,0);
 	pagesOrderList = new wxEditableListBox(GetParent(), 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
 }
@@ -36,26 +36,26 @@ LiseusePanel::~LiseusePanel()
 void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
-	pagesOrderList->SetStrings(filesPaths);
-	pagesOrderList->GetStrings(pagesArray);
-	for(int i=0; i<nbPages; i++) {
-		wxString filename = filesPaths.Item(i);
 
-		if ( !filename.empty() ) {
-//			tempImage = panel->LoadImage(filename);
+	for(int i=0; i<nbPages; i++) {
+		wxString filePath = filesPaths.Item(i);
+		files.paths.push_back(filePath);
+		wxString fileName = filePath.AfterLast('/');
+		files.names.push_back(fileName);
+
+		if ( !filePath.empty() ) {
 			if (imageRGB)
 				delete imageRGB;
 
 			// open image dialog box
-			imageRGB = new wxImage(filename, wxBITMAP_TYPE_ANY, -1);
+			imageRGB = new wxImage(filePath, wxBITMAP_TYPE_ANY, -1);
 			// ANY => can load many image formats
 			imageWidth = imageRGB->GetWidth();
 			imageHeight = imageRGB->GetHeight();
-
 			imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
 			wxImage tempImage = imageRGB->Copy();
-
 			pagesVector.at(i) = tempImage;
+
 			//update GUI
 			SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
 			if (nbPages > 1)
@@ -66,11 +66,13 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 			// update display
 			Refresh(false);
 		}
+		pagesOrderList->SetStrings(files.names);
+		pagesOrderList->GetStrings(pagesArray);
 	}
 	LoadPagesVector(pagesVector);
 }
 
-void LiseusePanel::SaveImage(wxString fileName)
+void LiseusePanel::SaveImage(wxString filePath)
 {
 	bool b ;
 
@@ -79,7 +81,7 @@ void LiseusePanel::SaveImage(wxString fileName)
 
 	wxImage* tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
 	// lend my image buffer...
-	b = tempImage->SaveFile(fileName) ;
+	b = tempImage->SaveFile(filePath) ;
 	delete(tempImage) ;		// buffer not needed any more
 	free(myImage);
 
@@ -87,7 +89,7 @@ void LiseusePanel::SaveImage(wxString fileName)
 		wxMessageBox(wxT("A problem occured during saving"));
 }
 
-void LiseusePanel::PrintPDF(wxString fileName,wxString mimeType)
+void LiseusePanel::PrintPDF(wxString filePath,wxString mimeType)
 {
 	/*
 	wxFileTypeInfo ftInfo = new wxFileTypeInfo(mimeType);
@@ -132,13 +134,16 @@ void LiseusePanel::UpdatePagesVector() {
 	if (pagesArray != pagesArrayNew) {
 		nbPages = pagesArrayNew.GetCount();
 		for(int i=0; i<nbPages; i++) {
-			wxString filename = pagesArrayNew.Item(i);
+			wxString fileName = pagesArrayNew.Item(i);
+			std::cout << fileName << "\n";
+			wxString filePath = files.findPath(fileName);
+			std::cout << filePath << "\n";
 
-			if ( !filename.empty() ) {
+			if ( !fileName.empty() ) {
 				if (imageRGB)
 					delete imageRGB;
 				// open image dialog box
-				imageRGB = new wxImage(filename, wxBITMAP_TYPE_ANY, -1);
+				imageRGB = new wxImage(filePath, wxBITMAP_TYPE_ANY, -1);
 				imageWidth = imageRGB->GetWidth();
 				imageHeight = imageRGB->GetHeight();
 				imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
