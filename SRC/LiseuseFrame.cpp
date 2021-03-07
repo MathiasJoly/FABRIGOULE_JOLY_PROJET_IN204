@@ -41,7 +41,6 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuBar->Append(menuView, _T("&View"));
 	SetMenuBar( menuBar );
 	CreateStatusBar();
-	SetStatusText(_T("Welcome to wxWidgets"));
 
 	// create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);

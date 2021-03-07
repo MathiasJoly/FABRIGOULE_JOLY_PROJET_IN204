@@ -42,6 +42,7 @@ enum
 struct Annotation {
   wxString note;
   wxPoint pt;
+
 };
 
 struct Files {
@@ -71,7 +72,7 @@ public:
   void OnListboxLDown(wxMouseEvent& event);
   void OnMouseDown(wxMouseEvent & event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-	void LoadPagesVector(std::vector<wxImage> vector);
+//	void LoadPagesVector(std::vector<wxImage> vector);
 
 	wxImage LoadImage(wxString fileName) ;
 	wxPoint *cursor;

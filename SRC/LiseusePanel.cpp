@@ -70,7 +70,6 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	}
 	pagesOrderList->SetStrings(files.names);
 	pagesOrderList->GetStrings(pagesArray);
-	LoadPagesVector(pagesVector);
 }
 
 void LiseusePanel::SaveImage(wxString filePath)
@@ -100,11 +99,6 @@ void LiseusePanel::BestSize()
 {
 	SetSize(imageWidth, imageHeight) ;	// ideal size for canvas
 	GetParent()->SetClientSize(GetSize());	// force the main frame to show the whole canvas
-}
-
-void LiseusePanel::LoadPagesVector(std::vector<wxImage> vector)
-{
-	pagesVector = vector;
 }
 
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
@@ -153,10 +147,7 @@ void LiseusePanel::UpdatePagesVector() {
 				else
 					SetSize(pageWidth, pageHeight);
 				GetParent()->SetClientSize(GetSize());
-				// update display
-				//Refresh(false);
 				GetParent()->Update();
-	//			OnPaint();
 			}
 		}
 	pagesArray = pagesArrayNew;
