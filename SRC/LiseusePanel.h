@@ -51,7 +51,6 @@ public:
 	void PrintPDF(wxString fileName,wxString mimeType) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
-	void Undo(wxString reponse, int i) ;
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
   void LoadPagesVector(std::vector<wxImage> vector);

@@ -132,8 +132,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 			wxSingleChoiceDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
 			if ( dlg1.ShowModal() == wxID_OK )
 			{
-				wxString reponse = "Oui";
-				Undo(reponse,i-1);
+				annotations.erase(annotations.begin()+i-1)
 			};	
 		}			
 		else 
@@ -153,13 +152,6 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 {
         event.Skip();
-}
-
-void LiseusePanel::Undo(wxString reponse, int i)
-{
-	bool confirmation = reponse.IsSameAs("OUI") | reponse.IsSameAs("Oui") | reponse.IsSameAs("oui") | reponse.IsSameAs("O") | reponse.IsSameAs("o") | reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ;
-	if ( confirmation )
-	{ annotations.erase(annotations.begin()+i); };
 }
 
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
