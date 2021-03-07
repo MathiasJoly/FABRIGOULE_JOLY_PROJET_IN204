@@ -19,6 +19,8 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 	cursor = new wxPoint(0,0);
 	annotations.resize(0);
+	pageWidth = 657;
+	pageHeight = 850;
 	wxSize pagesOrderListSize = wxSize(500,150);
 	wxPoint* pagesOrderListPos = new wxPoint(0,0);
 	pagesOrderList = new wxEditableListBox(this, 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
@@ -30,6 +32,44 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
+void LiseusePanel::LoadImages(wxArrayString filesPaths) {
+	nbPages = filesPaths.GetCount();
+	pagesVector.resize(nbPages);
+	pagesOrderList->SetStrings(filesPaths);
+	for(int i=0; i<nbPages; i++) {
+		wxString filename = filesPaths.Item(i);
+
+		if ( !filename.empty() ) {
+//			tempImage = panel->LoadImage(filename);
+			if (imageRGB)
+				delete imageRGB;
+
+			// open image dialog box
+			imageRGB = new wxImage(filename, wxBITMAP_TYPE_ANY, -1);
+			// ANY => can load many image formats
+				imageWidth = imageRGB->GetWidth();
+				imageHeight = imageRGB->GetHeight();
+//			imageWidth = 657;
+//			imageHeight = 850;
+
+			imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
+			wxImage tempImage = imageRGB->Copy();
+
+			pagesVector.at(i) = tempImage;
+			//update GUI
+			SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+			if (nbPages > 1)
+				SetSize(2*pageWidth, pageHeight);
+			else
+				SetSize(pageWidth, pageHeight);
+			GetParent()->SetClientSize(GetSize());
+			// update display
+			Refresh(false);
+		}
+	}
+	LoadPagesVector(pagesVector);
+}
+
 wxImage LiseusePanel::LoadImage(wxString fileName)
 {
 	if (imageRGB)
@@ -38,10 +78,10 @@ wxImage LiseusePanel::LoadImage(wxString fileName)
 	// open image dialog box
 	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
-//	imageWidth = imageRGB->GetWidth();
-//	imageHeight = imageRGB->GetHeight();
-	imageWidth = 657;
-	imageHeight = 850;
+	imageWidth = imageRGB->GetWidth();
+	imageHeight = imageRGB->GetHeight();
+//	imageWidth = 657;
+	//imageHeight = 850;
 
 	imageRGB->Rescale(imageWidth, imageHeight, wxIMAGE_QUALITY_BICUBIC);
 	wxImage tempImage = imageRGB->Copy();
@@ -98,7 +138,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		for (int i=0; i < pagesVector.size(); i++) {
 			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
 
-			dc.DrawBitmap(imageBitmap, i*(imageWidth), 0);
+			dc.DrawBitmap(imageBitmap, i*(pageWidth), 0);
 		}
 		for (int i=0; i < annotations.size(); i++) {
 			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);

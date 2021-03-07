@@ -48,6 +48,7 @@ public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
 	wxImage LoadImage(wxString fileName) ;
+  void LoadImages(wxArrayString filesPaths);
 	void SaveImage(wxString fileName) ;
 	void PrintPDF(wxString fileName,wxString mimeType) ;
 	void BestSize() ;
@@ -59,6 +60,10 @@ public:
 	wxPoint *cursor;
   std::vector<wxImage> pagesVector;
   wxEditableListBox* pagesOrderList;
+  unsigned int nbPages;
+  unsigned int pageWidth;
+  unsigned int pageHeight;
+
 
 private:
 	int imageWidth ;

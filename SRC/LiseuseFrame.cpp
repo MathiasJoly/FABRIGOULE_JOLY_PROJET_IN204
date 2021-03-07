@@ -90,7 +90,8 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 			return; // the user changed idea
 
 	openFileDialog.GetPaths(filesPaths);
-	nbPages = filesPaths.GetCount();
+	panel->LoadImages(filesPaths);
+/*	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
 	panel->pagesOrderList->SetStrings(filesPaths);
 
@@ -115,7 +116,8 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 			imageLoaded = true;
 		}
 	}
-	panel->LoadPagesVector(pagesVector);
+	panel->LoadPagesVector(pagesVector);*/
+	imageLoaded = true;
 }
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
