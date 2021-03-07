@@ -128,35 +128,6 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	}
 }
 
-//Used to refresh display without WXUNUSED
-void LiseusePanel::OnPaint()
-// update the main window content
-{
-	wxPaintDC dc(this);
-	DoPrepareDC(dc); // le scroll ne déforme plus l'image
-	if (imageRGB)
-	{
-		for (int i=0; i < nbPages; i++) {
-			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
-
-			dc.DrawBitmap(imageBitmap, i*(pageWidth), 0);
-		}
-		for (int i=0; i < annotations.size(); i++) {
-			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
-		}
-	}
-	Refresh();
-}
-
-/**void LiseusePanel::OnMouseDown(wxMouseEvent & event)
-{
-    std::cout << "mouse down!!!\n";
-		Refresh();
-		Update();
-		std::cout << "Refresh and Update done" << "\n";
-    event.Skip();
-}
-*/
 void LiseusePanel::UpdatePagesVector() {
 	if (pagesArray != pagesArrayNew) {
 		nbPages = pagesArrayNew.GetCount();
@@ -174,7 +145,6 @@ void LiseusePanel::UpdatePagesVector() {
 				wxImage tempImage = imageRGB->Copy();
 				pagesVector.at(i) = tempImage;
 				//update GUI
-				SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
 				if (nbPages > 1)
 					SetSize(2*pageWidth, pageHeight);
 				else
