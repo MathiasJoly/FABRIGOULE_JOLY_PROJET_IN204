@@ -7,8 +7,8 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpen)
 	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
-        EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
-        EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
+  EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
+  EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_SYNC_SETTING, LiseuseFrame::OnSyncSetting)
 	EVT_MENU(ID_ZOOM, LiseuseFrame::OnZoom)
 	EVT_MENU(ID_DISPLAY, LiseuseFrame::OnDisplay)
@@ -56,6 +56,8 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
 	imageLoaded = false ;
+	pageWidth = 657;
+	pageHeight = 850;
 	Centre() ;
 }
 
@@ -80,14 +82,37 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 {
 	wxBitmap bitmap;
 
-	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
-	if ( !filename.empty() )
-	{
-		panel->LoadImage(filename) ;
-		imageLoaded = true ;
-	}
-}
+	wxFileDialog openFileDialog(this,
+		_("Open .jpg files"), "", "", "All files (*.*)|*.*",
+		wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
 
+		if (openFileDialog.ShowModal() == wxID_CANCEL)
+			return; // the user changed idea
+
+	openFileDialog.GetPaths(filesPaths);
+	nbPages = filesPaths.GetCount();
+	pagesVector.resize(nbPages);
+
+	for(int i=0; i<nbPages; i++) {
+		wxString filename = filesPaths.Item(i);
+
+	//	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
+		if ( !filename.empty() )
+		{
+			tempImage = panel->LoadImage(filename);
+			pagesVector.at(i) = tempImage;
+			//update GUI
+			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+			panel->SetSize(pageWidth, pageHeight);
+			panel->GetParent()->SetClientSize(panel->GetSize());
+			// update display
+			panel->Refresh(false);
+
+			imageLoaded = true;
+		}
+	}
+	panel->LoadPagesVector(pagesVector);
+}
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
 //	char str[128] = "" ; // proposed file name

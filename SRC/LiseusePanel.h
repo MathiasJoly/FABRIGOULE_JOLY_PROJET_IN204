@@ -14,6 +14,7 @@
 #include <wx/font.h>
 #include <wx/mimetype.h>
 #include <wx/utils.h>
+#include <vector>
 
 #include "LiseuseApp.h"
 
@@ -38,7 +39,7 @@ class LiseusePanel: public wxScrolled<wxPanel>
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
-	void LoadImage(wxString fileName) ;
+	wxImage LoadImage(wxString fileName) ;
 	void SaveImage(wxString fileName) ;
 	void PrintPDF(wxString fileName,wxString mimeType) ;
 	void BestSize() ;
@@ -46,8 +47,9 @@ public:
 	void Undo(wxImage copie);
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+  void LoadPagesVector(std::vector<wxImage> vector);
 	wxPoint *cursor;
-  unsigned int nbPage;
+  std::vector<wxImage> pagesVector;
 
 private:
 	int imageWidth ;
