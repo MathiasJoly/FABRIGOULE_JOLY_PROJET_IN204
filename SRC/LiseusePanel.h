@@ -15,7 +15,9 @@
 #include <wx/mimetype.h>
 #include <wx/utils.h>
 #include <vector>
-#include <list>
+#include <wx/editlbox.h>
+#include <wx/arrstr.h>
+#include <wx/string.h>
 
 #include "LiseuseApp.h"
 
@@ -56,6 +58,7 @@ public:
   void LoadPagesVector(std::vector<wxImage> vector);
 	wxPoint *cursor;
   std::vector<wxImage> pagesVector;
+  wxEditableListBox* pagesOrderList;
 
 private:
 	int imageWidth ;

@@ -92,6 +92,7 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 	openFileDialog.GetPaths(filesPaths);
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
+	panel->pagesOrderList->SetStrings(filesPaths);
 
 	for(int i=0; i<nbPages; i++) {
 		wxString filename = filesPaths.Item(i);

@@ -19,6 +19,9 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 	cursor = new wxPoint(0,0);
 	annotations.resize(0);
+	wxSize pagesOrderListSize = wxSize(500,150);
+	wxPoint* pagesOrderListPos = new wxPoint(0,0);
+	pagesOrderList = new wxEditableListBox(this, 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
 }
 
 LiseusePanel::~LiseusePanel()
