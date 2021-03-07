@@ -6,7 +6,8 @@
 
 BEGIN_EVENT_TABLE(LiseusePanel, wxPanel)
 	EVT_PAINT(LiseusePanel::OnPaint)
-	EVT_MOUSE_EVENTS(LiseusePanel::OnClick)
+	EVT_RIGHT_DOWN(LiseusePanel::OnRightClick)
+	EVT_LEFT_DOWN(LiseusePanel::OnListboxLDown)
 	EVT_MOUSE_CAPTURE_LOST(LiseusePanel::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
@@ -23,7 +24,7 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	pageHeight = 850;
 	wxSize pagesOrderListSize = wxSize(500,150);
 	wxPoint* pagesOrderListPos = new wxPoint(0,0);
-	pagesOrderList = new wxEditableListBox(this, 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
+	pagesOrderList = new wxEditableListBox(GetParent(), 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
 }
 
 LiseusePanel::~LiseusePanel()
@@ -147,6 +148,15 @@ void LiseusePanel::OnPaint()
 	Refresh();
 }
 
+/**void LiseusePanel::OnMouseDown(wxMouseEvent & event)
+{
+    std::cout << "mouse down!!!\n";
+		Refresh();
+		Update();
+		std::cout << "Refresh and Update done" << "\n";
+    event.Skip();
+}
+*/
 void LiseusePanel::UpdatePagesVector() {
 	if (pagesArray != pagesArrayNew) {
 		nbPages = pagesArrayNew.GetCount();
@@ -171,19 +181,31 @@ void LiseusePanel::UpdatePagesVector() {
 					SetSize(pageWidth, pageHeight);
 				GetParent()->SetClientSize(GetSize());
 				// update display
-				Refresh(false);
-				OnPaint();
-				Refresh(false);
+				//Refresh(false);
+				GetParent()->Update();
+	//			OnPaint();
 			}
 		}
 	pagesArray = pagesArrayNew;
 	}
 }
 
-void LiseusePanel::OnClick(wxMouseEvent& event)
+void LiseusePanel::OnListboxLDown(wxMouseEvent& event) {
+	std::cout << "Enter panel::OnLeftClick" << "\n";
+	Refresh();
+	Update();
+	std::cout << "Refresh and Update done" << "\n";
+}
+
+void LiseusePanel::OnRightClick(wxMouseEvent& event)
 {
-	if (!event.RightUp()) event.Skip();
-	else if (imageRGB)
+	std::cout << "Enter OnRightClick" << "\n";
+	Refresh();
+	Update();
+	std::cout << "Refresh and Update done" << "\n";
+
+//	if (!event.RightUp()) event.Skip();
+	if (imageRGB)
 	{
 		wxImage copieRGB = imageRGB->Copy();
 		*cursor = event.GetPosition() + this->GetViewStart();

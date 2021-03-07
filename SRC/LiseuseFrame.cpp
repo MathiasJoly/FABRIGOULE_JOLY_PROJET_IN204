@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_ZOOM, LiseuseFrame::OnZoom)
 	EVT_MENU(ID_DISPLAY, LiseuseFrame::OnDisplay)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
+	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -55,8 +56,18 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
+	panel->pagesOrderList->Connect(wxEVT_LIST_ITEM_SELECTED, wxMouseEventHandler(LiseuseFrame::OnListboxLDown), NULL, this);
 	imageLoaded = false ;
 	Centre() ;
+}
+
+void LiseuseFrame::OnListboxLDown(wxMouseEvent & event)
+{
+    std::cout << "Frame : mouse down!!!\n";
+		Refresh();
+		Update();
+		std::cout << "Refresh and Update done" << "\n";
+    event.Skip();
 }
 
 void LiseuseFrame::OnQuit(wxCommandEvent& WXUNUSED(event))

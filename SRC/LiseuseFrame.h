@@ -12,6 +12,7 @@ public:
 	LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 	LiseusePanel *panel; // the canvas inside the main frame
 	wxArrayString filesPaths;
+	void OnListboxLDown(wxMouseEvent & event);
 
 protected:
 	void OnQuit(wxCommandEvent& event);

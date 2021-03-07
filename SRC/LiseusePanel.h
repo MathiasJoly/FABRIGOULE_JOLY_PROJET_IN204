@@ -18,6 +18,7 @@
 #include <wx/editlbox.h>
 #include <wx/arrstr.h>
 #include <wx/string.h>
+#include <wx/listctrl.h>
 
 #include "LiseuseApp.h"
 
@@ -53,7 +54,9 @@ public:
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void Undo(wxImage copie);
-	void OnClick(wxMouseEvent& event) ;
+	void OnRightClick(wxMouseEvent& event);
+  void OnListboxLDown(wxMouseEvent& event);
+  void OnMouseDown(wxMouseEvent & event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
   void LoadPagesVector(std::vector<wxImage> vector);
 	wxPoint *cursor;
