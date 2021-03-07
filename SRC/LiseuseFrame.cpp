@@ -54,10 +54,8 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 
 void LiseuseFrame::OnListboxLDown(wxMouseEvent & event)
 {
-    std::cout << "Frame : mouse down!!!\n";
 		Refresh();
 		Update();
-		std::cout << "Refresh and Update done" << "\n";
     event.Skip();
 }
 
@@ -100,32 +98,6 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 
 	openFileDialog.GetPaths(filesPaths);
 	panel->LoadImages(filesPaths);
-/*	nbPages = filesPaths.GetCount();
-	pagesVector.resize(nbPages);
-	panel->pagesOrderList->SetStrings(filesPaths);
-
-	for(int i=0; i<nbPages; i++) {
-		wxString filePath = filesPaths.Item(i);
-
-	//	wxString filePath = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
-		if ( !filePath.empty() )
-		{
-			tempImage = panel->LoadImage(filePath);
-			pagesVector.at(i) = tempImage;
-			//update GUI
-			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
-			if (nbPages > 1)
-				panel->SetSize(2*pageWidth, pageHeight);
-			else
-				panel->SetSize(pageWidth, pageHeight);
-			panel->GetParent()->SetClientSize(panel->GetSize());
-			// update display
-			panel->Refresh(false);
-
-			imageLoaded = true;
-		}
-	}
-	panel->LoadPagesVector(pagesVector);*/
 	imageLoaded = true;
 }
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))

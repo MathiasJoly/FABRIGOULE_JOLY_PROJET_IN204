@@ -35,6 +35,8 @@ LiseusePanel::~LiseusePanel()
 void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
+	files.paths = {};
+	files.names = {};
 
 	for(int i=0; i<nbPages; i++) {
 		wxString filePath = filesPaths.Item(i);
@@ -133,9 +135,7 @@ void LiseusePanel::UpdatePagesVector() {
 		nbPages = pagesArrayNew.GetCount();
 		for(int i=0; i<nbPages; i++) {
 			wxString fileName = pagesArrayNew.Item(i);
-			std::cout << fileName << "\n";
 			wxString filePath = files.findPath(fileName);
-			std::cout << filePath << "\n";
 
 			if ( !fileName.empty() ) {
 				if (imageRGB)
@@ -164,20 +164,14 @@ void LiseusePanel::UpdatePagesVector() {
 }
 
 void LiseusePanel::OnListboxLDown(wxMouseEvent& event) {
-	std::cout << "Enter panel::OnLeftClick" << "\n";
 	Refresh();
 	Update();
-	std::cout << "Refresh and Update done" << "\n";
 }
 
 void LiseusePanel::OnRightClick(wxMouseEvent& event)
 {
-	std::cout << "Enter OnRightClick" << "\n";
 	Refresh();
 	Update();
-	std::cout << "Refresh and Update done" << "\n";
-
-//	if (!event.RightUp()) event.Skip();
 	if (imageRGB)
 	{
 		*cursor = event.GetPosition() + this->GetViewStart();
