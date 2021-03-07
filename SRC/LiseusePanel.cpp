@@ -98,7 +98,7 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 			dc.DrawBitmap(imageBitmap, i*(imageWidth+10), 0);
 		}
 		for (int i=0; i < annotations.size(); i++) {
-			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-8);
+			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
 		}
 	}
 }
@@ -110,7 +110,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 	else if (imageRGB)
 	{
 		wxImage copieRGB = imageRGB->Copy();
-		*cursor = event.GetPosition();
+		*cursor = event.GetPosition() + this->GetViewStart();
 		wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
 		if ( dlg.ShowModal() == wxID_OK )
 		{
