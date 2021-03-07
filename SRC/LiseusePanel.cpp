@@ -128,10 +128,11 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 		if (undo) 
 		{
 			wxString s = annotations.at(i-1).note;
-			wxTextEntryDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s);
+			wxString *choices = new wxString();
+			wxSingleChoiceDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
 			if ( dlg1.ShowModal() == wxID_OK )
 			{
-				wxString reponse = dlg1.GetValue();
+				wxString reponse = "Oui";
 				Undo(reponse,i-1);
 			};	
 		}			
