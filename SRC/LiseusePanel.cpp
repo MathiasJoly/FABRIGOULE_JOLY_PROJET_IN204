@@ -66,9 +66,9 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 			// update display
 			Refresh(false);
 		}
-		pagesOrderList->SetStrings(files.names);
-		pagesOrderList->GetStrings(pagesArray);
 	}
+	pagesOrderList->SetStrings(files.names);
+	pagesOrderList->GetStrings(pagesArray);
 	LoadPagesVector(pagesVector);
 }
 

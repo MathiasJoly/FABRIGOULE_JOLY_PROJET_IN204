@@ -16,6 +16,7 @@ public:
 
 protected:
 	void OnQuit(wxCommandEvent& event);
+	void OnOrder(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnSyncSetting(wxCommandEvent& event);
@@ -26,10 +27,12 @@ protected:
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event)) ;
 	void OnProcessImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnClose(wxCloseEvent& event) ;
+
 	wxImage tempImage;
 	std::vector<wxImage> pagesVector;
+	bool imageLoaded;
+	bool orderShown;
 
-	bool imageLoaded ;
 	DECLARE_EVENT_TABLE()
 };
 

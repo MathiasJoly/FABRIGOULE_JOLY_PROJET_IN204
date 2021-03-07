@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_ZOOM, LiseuseFrame::OnZoom)
 	EVT_MENU(ID_DISPLAY, LiseuseFrame::OnDisplay)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
+	EVT_MENU(ID_ORDER, LiseuseFrame::OnOrder)
 	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
@@ -45,6 +46,7 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuView->AppendSeparator();
 	menuView->Append(ID_DISPLAY, "&Display");
 	menuView->Append(ID_BEST_SIZE, _T("&Best size"));
+	menuView->Append(ID_ORDER, _T("&Order"));
 
 	wxMenuBar *menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, _T("&File"));
@@ -57,7 +59,9 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
 	panel->pagesOrderList->Connect(wxEVT_LIST_ITEM_SELECTED, wxMouseEventHandler(LiseuseFrame::OnListboxLDown), NULL, this);
-	imageLoaded = false ;
+	imageLoaded = false;
+	panel->pagesOrderList->Hide();
+	orderShown = false;
 	Centre() ;
 }
 
@@ -73,6 +77,15 @@ void LiseuseFrame::OnListboxLDown(wxMouseEvent & event)
 void LiseuseFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true) ;
+}
+
+void LiseuseFrame::OnOrder(wxCommandEvent& WXUNUSED(event))
+{
+	if (orderShown)
+  	panel->pagesOrderList->Hide();
+	else
+		panel->pagesOrderList->Show();
+	orderShown = !orderShown;
 }
 
 void LiseuseFrame::OnClose(wxCloseEvent& event)

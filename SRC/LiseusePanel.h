@@ -36,6 +36,7 @@ enum
     ID_ZOOM = 11,
     ID_DISPLAY = 12,
     ID_PDF = 13,
+    ID_ORDER = 14,
 };
 
 struct Annotation {
