@@ -56,8 +56,6 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
 	imageLoaded = false ;
-	pageWidth = 657;
-	pageHeight = 850;
 	Centre() ;
 }
 

@@ -12,10 +12,6 @@ public:
 	LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 	LiseusePanel *panel; // the canvas inside the main frame
 	wxArrayString filesPaths;
-  unsigned int nbPages;
-	unsigned int pageWidth;
-	unsigned int pageHeight;
-
 
 protected:
 	void OnQuit(wxCommandEvent& event);

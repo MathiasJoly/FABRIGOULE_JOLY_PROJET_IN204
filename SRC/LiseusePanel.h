@@ -47,7 +47,6 @@ class LiseusePanel: public wxScrolled<wxPanel>
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
-	wxImage LoadImage(wxString fileName) ;
   void LoadImages(wxArrayString filesPaths);
 	void SaveImage(wxString fileName) ;
 	void PrintPDF(wxString fileName,wxString mimeType) ;
@@ -71,9 +70,13 @@ private:
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
   std::vector<Annotation> annotations;
+  wxArrayString pagesArray;
+  wxArrayString pagesArrayNew;
 
 
-	void OnPaint(wxPaintEvent &event) ;
+  void UpdatePagesVector();
+	void OnPaint(wxPaintEvent &event);
+  void OnPaint();
 
 	DECLARE_EVENT_TABLE()
 };

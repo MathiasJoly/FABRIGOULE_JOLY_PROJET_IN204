@@ -36,6 +36,7 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
 	pagesOrderList->SetStrings(filesPaths);
+	pagesOrderList->GetStrings(pagesArray);
 	for(int i=0; i<nbPages; i++) {
 		wxString filename = filesPaths.Item(i);
 
@@ -47,10 +48,8 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 			// open image dialog box
 			imageRGB = new wxImage(filename, wxBITMAP_TYPE_ANY, -1);
 			// ANY => can load many image formats
-				imageWidth = imageRGB->GetWidth();
-				imageHeight = imageRGB->GetHeight();
-//			imageWidth = 657;
-//			imageHeight = 850;
+			imageWidth = imageRGB->GetWidth();
+			imageHeight = imageRGB->GetHeight();
 
 			imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
 			wxImage tempImage = imageRGB->Copy();
@@ -68,25 +67,6 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 		}
 	}
 	LoadPagesVector(pagesVector);
-}
-
-wxImage LiseusePanel::LoadImage(wxString fileName)
-{
-	if (imageRGB)
-		delete imageRGB;
-
-	// open image dialog box
-	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
-	// ANY => can load many image formats
-	imageWidth = imageRGB->GetWidth();
-	imageHeight = imageRGB->GetHeight();
-//	imageWidth = 657;
-	//imageHeight = 850;
-
-	imageRGB->Rescale(imageWidth, imageHeight, wxIMAGE_QUALITY_BICUBIC);
-	wxImage tempImage = imageRGB->Copy();
-
-	return tempImage;
 }
 
 void LiseusePanel::SaveImage(wxString fileName)
@@ -129,13 +109,14 @@ void LiseusePanel::LoadPagesVector(std::vector<wxImage> vector) {
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 // update the main window content
 {
-
+	pagesOrderList->GetStrings(pagesArrayNew);
+	UpdatePagesVector();
 	wxPaintDC dc(this);
 	DoPrepareDC(dc); // le scroll ne déforme plus l'image
 
 	if (imageRGB)
 	{
-		for (int i=0; i < pagesVector.size(); i++) {
+		for (int i=0; i < nbPages; i++) {
 			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
 
 			dc.DrawBitmap(imageBitmap, i*(pageWidth), 0);
@@ -146,6 +127,58 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 	}
 }
 
+//Used to refresh display without WXUNUSED
+void LiseusePanel::OnPaint()
+// update the main window content
+{
+	wxPaintDC dc(this);
+	DoPrepareDC(dc); // le scroll ne déforme plus l'image
+	if (imageRGB)
+	{
+		for (int i=0; i < nbPages; i++) {
+			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
+
+			dc.DrawBitmap(imageBitmap, i*(pageWidth), 0);
+		}
+		for (int i=0; i < annotations.size(); i++) {
+			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
+		}
+	}
+	Refresh();
+}
+
+void LiseusePanel::UpdatePagesVector() {
+	if (pagesArray != pagesArrayNew) {
+		nbPages = pagesArrayNew.GetCount();
+		for(int i=0; i<nbPages; i++) {
+			wxString filename = pagesArrayNew.Item(i);
+
+			if ( !filename.empty() ) {
+				if (imageRGB)
+					delete imageRGB;
+				// open image dialog box
+				imageRGB = new wxImage(filename, wxBITMAP_TYPE_ANY, -1);
+				imageWidth = imageRGB->GetWidth();
+				imageHeight = imageRGB->GetHeight();
+				imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
+				wxImage tempImage = imageRGB->Copy();
+				pagesVector.at(i) = tempImage;
+				//update GUI
+				SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+				if (nbPages > 1)
+					SetSize(2*pageWidth, pageHeight);
+				else
+					SetSize(pageWidth, pageHeight);
+				GetParent()->SetClientSize(GetSize());
+				// update display
+				Refresh(false);
+				OnPaint();
+				Refresh(false);
+			}
+		}
+	pagesArray = pagesArrayNew;
+	}
+}
 
 void LiseusePanel::OnClick(wxMouseEvent& event)
 {
