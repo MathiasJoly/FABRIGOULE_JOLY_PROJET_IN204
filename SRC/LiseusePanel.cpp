@@ -127,15 +127,21 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 		}
 		if (undo) 
 		{
-			annotations.erase(annotations.begin() + i-1);	
+			wxString s = annotations.at(i-1).note;
+			wxTextEntryDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s);
+			if ( dlg1.ShowModal() == wxID_OK )
+			{
+				wxString reponse = dlg1.GetValue();
+				Undo(reponse,i-1);
+			};	
 		}			
 		else 
 		{
-			wxTextEntryDialog dlg(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
-			if ( dlg.ShowModal() == wxID_OK )
+			wxTextEntryDialog dlg2(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
+			if ( dlg2.ShowModal() == wxID_OK )
 			{
 				// We can be certain that this string contains letters only.
-				wxString value = dlg.GetValue();
+				wxString value = dlg2.GetValue();
 				Annoter(value,*cursor);
 			};
 		};
@@ -148,20 +154,11 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
         event.Skip();
 }
 
-void LiseusePanel::Undo(wxImage copie)
+void LiseusePanel::Undo(wxString reponse, int i)
 {
-	wxTextEntryDialog dlg(this,_T("Cette annotation vous convient-elle ?"),_T("Verification :"));
-	if ( dlg.ShowModal() == wxID_OK )
-	{
-		wxString reponse = dlg.GetValue();
-		bool convenable = reponse.IsSameAs("OUI") | reponse.IsSameAs("Oui") | reponse.IsSameAs("oui") | reponse.IsSameAs("O") | reponse.IsSameAs("o") |
-					reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ;
-		if ( !convenable )
-		{
-			*imageRGB = copie;
-			Refresh();
-		};
-	};
+	bool confirmation = reponse.IsSameAs("OUI") | reponse.IsSameAs("Oui") | reponse.IsSameAs("oui") | reponse.IsSameAs("O") | reponse.IsSameAs("o") | reponse.IsSameAs("YES") | reponse.IsSameAs("Yes") | reponse.IsSameAs("yes") | reponse.IsSameAs("Y") | reponse.IsSameAs("y") ;
+	if ( confirmation )
+	{ annotations.erase(annotations.begin()+i); };
 }
 
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
