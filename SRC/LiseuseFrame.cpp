@@ -103,7 +103,10 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 			pagesVector.at(i) = tempImage;
 			//update GUI
 			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
-			panel->SetSize(pageWidth, pageHeight);
+			if (nbPages > 1)
+				panel->SetSize(2*pageWidth, pageHeight);
+			else
+				panel->SetSize(pageWidth, pageHeight);
 			panel->GetParent()->SetClientSize(panel->GetSize());
 			// update display
 			panel->Refresh(false);
