@@ -14,7 +14,6 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 {
 	imageRGB = NULL;
 	annotations = {};
-//	this->SetScrollRate(20,20);
 	this->SetScrollbars(20,20,100,100);
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 	cursor = new wxPoint(0,0);
@@ -35,8 +34,7 @@ wxImage LiseusePanel::LoadImage(wxString fileName)
 	// open image dialog box
 	imageRGB = new wxImage(fileName, wxBITMAP_TYPE_ANY, -1);
 	// ANY => can load many image formats
-//	imageWidth = imageRGB->GetWidth();
-//	imageHeight = imageRGB->GetHeight();
+
 	imageWidth = 657;
 	imageHeight = 850;
 
@@ -50,27 +48,23 @@ void LiseusePanel::SaveImage(wxString fileName)
 {
 	bool b ;
 
-	unsigned char* myImage = (unsigned char*)malloc(imageWidth * imageHeight * 3) ;
-	memcpy(myImage, imageRGB->GetData(), imageWidth * imageHeight * 3) ;
+	wxMemoryDC mdc(imageBitmap);
 
-	wxImage* tempImage = new wxImage(imageWidth, imageHeight, myImage, true);
-	// lend my image buffer...
-	b = tempImage->SaveFile(fileName) ;
-	delete(tempImage) ;		// buffer not needed any more
-	free(myImage);
+	wxFont* font = new wxFont(wxFontInfo(8));
+	mdc.SetFont(*font);
+
+	mdc.DrawBitmap(imageBitmap, 0, 0);
+	for (int i=0; i < annotations.size(); i++) 
+	{
+		// Afficher les annotations
+		mdc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
+	};
+
+	wxImage tempImage = imageBitmap.ConvertToImage();
+	b = tempImage.SaveFile(fileName) ;
 
 	if(!b)
 		wxMessageBox(wxT("A problem occured during saving"));
-}
-
-void LiseusePanel::PrintPDF(wxString fileName,wxString mimeType)
-{
-	/*
-	wxFileTypeInfo ftInfo = new wxFileTypeInfo(mimeType);
-	wxFileType ft = new wxFileType(ftInfo);
-	wxString* command = new wxString();
-	bool succes = ft.GetPrintCommand(command,
-	*/
 }
 
 void LiseusePanel::BestSize()
@@ -79,28 +73,33 @@ void LiseusePanel::BestSize()
 	GetParent()->SetClientSize(GetSize());	// force the main frame to show the whole canvas
 }
 
-void LiseusePanel::LoadPagesVector(std::vector<wxImage> vector) {
+void LiseusePanel::LoadPagesVector(std::vector<wxImage> vector) 
+{
 	pagesVector = vector;
 }
 
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
-// update the main window content
+// update the main window content. Appelé avec Refresh()
 {
 
 	wxPaintDC dc(this);
-	DoPrepareDC(dc); // le scroll ne déforme plus l'image
-
+	DoPrepareDC(dc);
+	wxFont* font = new wxFont(wxFontInfo(8));
+	dc.SetFont(*font);
 	if (imageRGB)
 	{
-		for (int i=0; i < pagesVector.size(); i++) {
-			imageBitmap = wxBitmap(pagesVector.at(i), -1); // ...to get the corresponding bitmap
-
+		for (int i=0; i < pagesVector.size(); i++) 
+		{
+			// Afficher les images
+			imageBitmap = wxBitmap(pagesVector.at(i), -1); 
 			dc.DrawBitmap(imageBitmap, i*(imageWidth), 0);
-		}
-		for (int i=0; i < annotations.size(); i++) {
+		};
+		for (int i=0; i < annotations.size(); i++) 
+		{
+			// Afficher les annotations
 			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-5,annotations.at(i).pt.y-15);
-		}
-	}
+		};
+	};
 }
 
 
@@ -130,8 +129,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 			wxString s = annotations.at(i-1).note;
 			wxString *choices = new wxString();
 			wxSingleChoiceDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
-			if ( dlg1.ShowModal() == wxID_OK )
-			{ annotations.erase(annotations.begin()+i-1); };	
+			if ( dlg1.ShowModal() == wxID_OK ) annotations.erase(annotations.begin()+i-1);	
 		}			
 		else 
 		{
@@ -154,27 +152,8 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
 {
-	std::cout<< "Annoter is called" << "\n";
 	Annotation temp_annotation = {.note = myNote, .pt = myPt};
 	annotations.push_back(temp_annotation);
-	std::cout<<"annotations list is of size : " << annotations.size() << "\n";
-
-/*
-		imageBitmap = wxBitmap(*imageRGB, -1); // ...to get the corresponding bitmap
-
-		wxMemoryDC mdc(imageBitmap);
-		DoPrepareDC(mdc); // le scroll ne déforme plus l'image
-
-		wxFont* font = new wxFont(wxFontInfo(6));
-		mdc.SetFont(*font);
-
-		mdc.DrawBitmap(imageBitmap, 0, 0);
-
-		mdc.DrawText(note,pt.x-5,pt.y-8);
-
-		*imageRGB = imageBitmap.ConvertToImage();
-*/
-		Refresh(false);
 }
 
 

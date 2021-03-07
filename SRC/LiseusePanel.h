@@ -44,26 +44,26 @@ struct Annotation {
 class LiseusePanel: public wxScrolled<wxPanel>
 {
 public:
-    LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
-    ~LiseusePanel() ;
-	wxImage LoadImage(wxString fileName) ;
+	LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
+	~LiseusePanel() ;
+
 	void SaveImage(wxString fileName) ;
-	void PrintPDF(wxString fileName,wxString mimeType) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
 	void OnClick(wxMouseEvent& event) ;
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-  void LoadPagesVector(std::vector<wxImage> vector);
+	void LoadPagesVector(std::vector<wxImage> vector);
+
+	wxImage LoadImage(wxString fileName) ;
 	wxPoint *cursor;
-  std::vector<wxImage> pagesVector;
+	std::vector<wxImage> pagesVector;
 
 private:
 	int imageWidth ;
 	int imageHeight ;
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
-  std::vector<Annotation> annotations;
-
+	std::vector<Annotation> annotations;
 
 	void OnPaint(wxPaintEvent &event) ;
 
