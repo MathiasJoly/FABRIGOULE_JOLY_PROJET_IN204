@@ -15,6 +15,7 @@
 #include <wx/mimetype.h>
 #include <wx/utils.h>
 #include <vector>
+#include <list>
 
 #include "LiseuseApp.h"
 
@@ -32,6 +33,11 @@ enum
     ID_ZOOM = 11,
     ID_DISPLAY = 12,
     ID_PDF = 13,
+};
+
+struct Annotation {
+  wxString note;
+  wxPoint pt;
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>
@@ -56,6 +62,8 @@ private:
 	int imageHeight ;
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
+  std::vector<Annotation> annotations;
+
 
 	void OnPaint(wxPaintEvent &event) ;
 
