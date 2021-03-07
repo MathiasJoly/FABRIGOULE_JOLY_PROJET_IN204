@@ -7,13 +7,14 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpen)
 	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
-	EVT_MENU(ID_PROCESS,  LiseuseFrame::OnProcessImage)
-        EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
-        EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
+  EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
+  EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_SYNC_SETTING, LiseuseFrame::OnSyncSetting)
 	EVT_MENU(ID_ZOOM, LiseuseFrame::OnZoom)
 	EVT_MENU(ID_DISPLAY, LiseuseFrame::OnDisplay)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
+	EVT_MENU(ID_ORDER, LiseuseFrame::OnOrder)
+	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -31,7 +32,6 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	OpenRecent->Append(ID_OPEN, "Sheet3");
     	menuFile->AppendSeparator();
 	menuFile->Append(ID_LOAD, _T("&Open image..."));
-	menuFile->Append(ID_PROCESS, _T("&Process image"));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
 	menuFile->AppendSeparator();
     	menuFile->Append(ID_SYNC_SETTING, "&Sync Setting");
@@ -46,6 +46,7 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuView->AppendSeparator();
 	menuView->Append(ID_DISPLAY, "&Display");
 	menuView->Append(ID_BEST_SIZE, _T("&Best size"));
+	menuView->Append(ID_ORDER, _T("&Order"));
 
 	wxMenuBar *menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, _T("&File"));
@@ -57,13 +58,34 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 
 // create the panel that will manage the image
 	panel = new LiseusePanel( this, -1, wxDefaultPosition, wxDefaultSize);
-	imageLoaded = false ;
+	panel->pagesOrderList->Connect(wxEVT_LIST_ITEM_SELECTED, wxMouseEventHandler(LiseuseFrame::OnListboxLDown), NULL, this);
+	imageLoaded = false;
+	panel->pagesOrderList->Hide();
+	orderShown = false;
 	Centre() ;
+}
+
+void LiseuseFrame::OnListboxLDown(wxMouseEvent & event)
+{
+    std::cout << "Frame : mouse down!!!\n";
+		Refresh();
+		Update();
+		std::cout << "Refresh and Update done" << "\n";
+    event.Skip();
 }
 
 void LiseuseFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true) ;
+}
+
+void LiseuseFrame::OnOrder(wxCommandEvent& WXUNUSED(event))
+{
+	if (orderShown)
+  	panel->pagesOrderList->Hide();
+	else
+		panel->pagesOrderList->Show();
+	orderShown = !orderShown;
 }
 
 void LiseuseFrame::OnClose(wxCloseEvent& event)
@@ -74,43 +96,51 @@ void LiseuseFrame::OnClose(wxCloseEvent& event)
 
 void LiseuseFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox( _T("How to \n\n- load\n- display\n- process\n- save\n\nan image with wxWidgets (2.8.7)\n\nPascal Bertolino - GIPSA-lab, Grenoble - France\npascal.bertolino@gipsa-lab.fr"),
+    wxMessageBox( _T("Pour Annoter faites un clic droit"),
                   _T(APP_NAME), wxOK | wxICON_INFORMATION ) ;
-}
-
-void LiseuseFrame::OnProcessImage(wxCommandEvent& WXUNUSED(event))
-{
-	if (imageLoaded)
-	    panel->ProcessImage() ;
 }
 
 void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 {
 	wxBitmap bitmap;
 
-	wxFileDialog openFileDialog(this, _("Open .jpg files"), "", "",
-									 "All files (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
-									 if (openFileDialog.ShowModal() == wxID_CANCEL)
-									 		return; // the user changed idea...
+	wxFileDialog openFileDialog(this,
+		_("Open .jpg files"), "", "", "All files (*.*)|*.*",
+		wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
 
-	 // proceed loading the file chosen by the user;
-   // this can be done with e.g. wxWidgets input streams:
+		if (openFileDialog.ShowModal() == wxID_CANCEL)
+			return; // the user changed idea
 
-//   wxFileInputStream paths(openFileDialog.GetPaths());
-	 //printf(input_stream);
-	 openFileDialog.GetPaths(filesPaths);
+	openFileDialog.GetPaths(filesPaths);
+	panel->LoadImages(filesPaths);
+/*	nbPages = filesPaths.GetCount();
+	pagesVector.resize(nbPages);
+	panel->pagesOrderList->SetStrings(filesPaths);
 
-	 wxString filename = filesPaths.Last();
-//	 filename = paths.Last();
+	for(int i=0; i<nbPages; i++) {
+		wxString filePath = filesPaths.Item(i);
 
-//	wxString filename = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
-	if ( !filename.empty() )
-	{
-		panel->LoadImages(filesPaths);
-		imageLoaded = true ;
+	//	wxString filePath = wxFileSelector(_T("Select file"),_T(""),_T(""),_T(""), _T("All files (*.*)|*.*") );
+		if ( !filePath.empty() )
+		{
+			tempImage = panel->LoadImage(filePath);
+			pagesVector.at(i) = tempImage;
+			//update GUI
+			panel->SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+			if (nbPages > 1)
+				panel->SetSize(2*pageWidth, pageHeight);
+			else
+				panel->SetSize(pageWidth, pageHeight);
+			panel->GetParent()->SetClientSize(panel->GetSize());
+			// update display
+			panel->Refresh(false);
+
+			imageLoaded = true;
+		}
 	}
+	panel->LoadPagesVector(pagesVector);*/
+	imageLoaded = true;
 }
-
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
 //	char str[128] = "" ; // proposed file name
@@ -118,9 +148,9 @@ void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 	if (!imageLoaded)
 		return ;
 
-	wxString filename = wxFileSelector(_T("Save image as"),_T(""),_T(""),_T("*.bmp"), _T("BMP files (*.bmp)|*.bmp|GIF files (*gif)|*.gif|JPEG files (*jpg)|*.jpg|PNG files (*png)|*.png|TIFF files (*tif)|*.tif|XPM files (*xpm)|*.xpm|All files (*.*)|*.*"), wxFD_SAVE );
-	if ( !filename.empty() )
-		panel->SaveImage(filename) ;
+	wxString filePath = wxFileSelector(_T("Save image as"),_T(""),_T(""),_T("*.bmp"), _T("BMP files (*.bmp)|*.bmp|GIF files (*gif)|*.gif|JPEG files (*jpg)|*.jpg|PNG files (*png)|*.png|TIFF files (*tif)|*.tif|XPM files (*xpm)|*.xpm|All files (*.*)|*.*"), wxFD_SAVE );
+	if ( !filePath.empty() )
+		panel->SaveImage(filePath) ;
 }
 
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))

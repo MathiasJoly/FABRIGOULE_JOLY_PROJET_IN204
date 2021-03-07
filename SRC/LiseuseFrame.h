@@ -3,19 +3,20 @@
 
 #include "LiseuseApp.h"
 #include "LiseusePanel.h"
-#include <wx/wfstream.h>
 #include <wx/filedlg.h>
-#include <wx/arrstr.h>
+#include <vector>
 
 class LiseuseFrame: public wxFrame
 {
 public:
 	LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 	LiseusePanel *panel; // the canvas inside the main frame
- 	wxArrayString filesPaths;
+	wxArrayString filesPaths;
+	void OnListboxLDown(wxMouseEvent & event);
 
 protected:
 	void OnQuit(wxCommandEvent& event);
+	void OnOrder(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnSyncSetting(wxCommandEvent& event);
@@ -27,7 +28,11 @@ protected:
 	void OnProcessImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnClose(wxCloseEvent& event) ;
 
-	bool imageLoaded ;
+	wxImage tempImage;
+	std::vector<wxImage> pagesVector;
+	bool imageLoaded;
+	bool orderShown;
+
 	DECLARE_EVENT_TABLE()
 };
 

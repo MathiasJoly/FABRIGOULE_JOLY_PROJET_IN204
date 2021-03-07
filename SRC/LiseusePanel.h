@@ -9,6 +9,16 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/dcmemory.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/mimetype.h>
+#include <wx/utils.h>
+#include <vector>
+#include <wx/editlbox.h>
+#include <wx/arrstr.h>
+#include <wx/string.h>
+#include <wx/listctrl.h>
 
 #include "LiseuseApp.h"
 #include <list>
@@ -19,27 +29,62 @@
 enum
 {
     ID_QUIT = 1,
-    ID_ABOUT,
-    ID_LOAD,
-    ID_SAVE,
-    ID_PROCESS,
-    ID_BEST_SIZE,
-    ID_OPEN = 1,
-    ID_OPEN_RECENT = 1,
-    ID_SYNC_SETTING = 1,
-    ID_ZOOM = 1,
-    ID_DISPLAY = 1
+    ID_ABOUT = 2,
+    ID_LOAD = 3,
+    ID_NOTE = 4,
+    ID_SAVE = 5,
+    ID_BEST_SIZE = 7,
+    ID_OPEN = 8,
+    ID_OPEN_RECENT = 9,
+    ID_SYNC_SETTING = 10,
+    ID_ZOOM = 11,
+    ID_DISPLAY = 12,
+    ID_PDF = 13,
+    ID_ORDER = 14,
+};
+
+struct Annotation {
+  wxString note;
+  wxPoint pt;
+};
+
+struct Files {
+  wxArrayString names;
+  wxArrayString paths;
+
+  wxString findPath(wxString fileName) {
+    for (int i=0; i<names.GetCount(); i++) {
+      if (fileName == names.Item(i))
+        return paths.Item(i);
+    }
+      std::cout << "No such a file in opened pages" << "\n";
+      return ("");
+  }
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>
 {
 public:
-  LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
-  ~LiseusePanel() ;
-	void LoadImages(wxArrayString filesPaths) ;
-	void SaveImage(wxString fileName) ;
-	void ProcessImage() ;
+    LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
+    ~LiseusePanel() ;
+  void LoadImages(wxArrayString filesPaths);
+	void SaveImage(wxString filePath) ;
+	void PrintPDF(wxString filePath,wxString mimeType) ;
 	void BestSize() ;
+	void Annoter(wxString note, wxPoint pt) ;
+	void Undo(wxImage copie);
+	void OnRightClick(wxMouseEvent& event);
+  void OnListboxLDown(wxMouseEvent& event);
+  void OnMouseDown(wxMouseEvent & event);
+	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+  void LoadPagesVector(std::vector<wxImage> vector);
+	wxPoint *cursor;
+  std::vector<wxImage> pagesVector;
+  wxEditableListBox* pagesOrderList;
+  unsigned int nbPages;
+  unsigned int pageWidth;
+  unsigned int pageHeight;
+
 
 private:
 	int imageWidth ;
@@ -48,15 +93,15 @@ private:
 	int pageHeight ;
 	wxBitmap imageBitmap ;		// used to display the image
 	wxImage *imageRGB ;		// used to load the image
-	unsigned char* myImage ;	// used to process the image
-
-  std::list<wxBitmap> imagesBitmap ;		// used to display the image
-	std::list<wxImage> *imagesRGB ;		// used to load the image
-	std::vector<unsigned char*> myImages;	// used to process the image
-  unsigned int nbPage;
+  std::vector<Annotation> annotations;
+  wxArrayString pagesArray;
+  wxArrayString pagesArrayNew;
+  Files files;
 
 
-	void OnPaint(wxPaintEvent &event) ;
+  void UpdatePagesVector();
+	void OnPaint(wxPaintEvent &event);
+  void OnPaint();
 
 	DECLARE_EVENT_TABLE()
 };
