@@ -131,9 +131,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 			wxString *choices = new wxString();
 			wxSingleChoiceDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
 			if ( dlg1.ShowModal() == wxID_OK )
-			{
-				annotations.erase(annotations.begin()+i-1)
-			};	
+			{ annotations.erase(annotations.begin()+i-1); };	
 		}			
 		else 
 		{
@@ -142,7 +140,7 @@ void LiseusePanel::OnClick(wxMouseEvent& event)
 			{
 				// We can be certain that this string contains letters only.
 				wxString value = dlg2.GetValue();
-				Annoter(value,*cursor);
+				if (!value.IsSameAs("")) Annoter(value,*cursor);
 			};
 		};
 		Refresh();
