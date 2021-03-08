@@ -146,16 +146,7 @@ void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
 {
 	if(!imageLoaded)
 		return ;
-/*
-	wxTextEntryDialog dlg(this,_T("Choisissez un nom pour cette partition!"),_T("Liste des images :"));
-	if ( dlg.ShowModal() == wxID_OK )
-	{
-		wxString nomWX = dlg.GetValue();
-		std::string nom = nomWX.ToStdString();
-		std::string extension = ".partition";
-		panel->WriteFile(nom.append(suffixe));
-	};
-*/
+
 	wxString filePathWX = wxFileSelector(_T("Save image names in textfile as"),_T(""),_T(""),_T("*.txt"), _T("Partition files (*.partition)|*.partition"), wxFD_SAVE );
 	if ( !filePathWX.empty() )
 	{

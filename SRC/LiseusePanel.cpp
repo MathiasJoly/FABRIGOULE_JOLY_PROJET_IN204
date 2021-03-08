@@ -74,19 +74,76 @@ void LiseusePanel::NewImages(wxArrayString filesPaths) {
 	imagesLoaded = true;
 }
 
+void LiseusePanel::ReadAnnotation(wxString fileName){
+	std::string deleteline;
+	std::string line;
+
+	std::ifstream fileAnnotation;
+	fileAnnotation.open("annotation.txt");
+	std::ofstream fileTemporaire;
+	fileTemporaire.open("temporaire.txt");
+
+	while (getline(fileAnnotation,line))
+	{
+		std::istringstream iss(line);
+    		std::string name, msg;
+		int x,y;
+		unsigned int n;
+    		if (!(iss >> name >> msg >> x >> y >> n)) { break; }
+		wxString nameWX(name);
+		if (fileName.IsSameAs(nameWX))
+		{
+			wxString msgWX(msg);
+			wxPoint point(x,y);
+			Annotation note = {.note = msgWX, .pt = point, .pageNumber = n};
+			annotations.push_back(note);
+		}
+		else fileTemporaire << line << std::endl;
+
+	};
+
+	fileTemporaire.close();
+	fileAnnotation.close();
+	rename("annotation.txt","sauvegarde.txt");
+	rename("temporaire.txt","annotation.txt");
+}
+
+void LiseusePanel::WriteAnnotation(wxString fileName){
+	std::ofstream fileAnnotation;
+	fileAnnotation.open("annotation.txt",std::ios::app); // ou ios_base
+
+	for (int i=0; i < annotations.size(); i++)
+	{
+		unsigned int n = annotations.at(i).pageNumber;
+		wxString nameWX = files.FindName(n);
+		wxString msgWX = annotations.at(i).note;
+    		wxPoint point = annotations.at(i).pt;
+		if (fileName.IsSameAs(nameWX))
+		{
+			std::string name = nameWX.ToStdString();
+			std::string msg = msgWX.ToStdString();
+			int x = point.x;
+			int y = point.y;
+			fileAnnotation << name << msg << x << y << n << std::endl;
+		}
+	};
+
+	fileAnnotation.close();
+}
+
 void LiseusePanel::OpenImages(std::string Nom) {
-	imagesLoaded = false;
-	std::ifstream myFile;
-	myFile.open(Nom);
+	std::ifstream filePartition;
+	filePartition.open(Nom);
 	nbPages = 0;
 	pagesVector = {};
 	files.vector = {};
-	for( std::string line; getline( myFile, line ); )
+	for( std::string line; getline( filePartition, line ); )
 	{
 		wxString filePath(line);
 		wxString fileName = filePath.AfterLast('/');
 		File file = {.name = fileName, .path = filePath, .pageNumber = nbPages};
 		files.vector.push_back(file);
+		ReadAnnotation(fileName);
 		nbPages++;
 		if (imageRGB)
 			delete imageRGB;
@@ -117,6 +174,8 @@ void LiseusePanel::OpenImages(std::string Nom) {
 	files.GetNames(&fileNames);
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
+
+	filePartition.close();
 	imagesLoaded = true;
 }
 
@@ -145,15 +204,16 @@ void LiseusePanel::SaveImage(wxString filePath)
 
 void LiseusePanel::WriteFile(std::string Nom)
 {
-	std::ofstream myFile;
-	myFile.open(Nom);
+	std::ofstream filePartition;
+	filePartition.open(Nom);
 	for(unsigned int i=0; i<nbPages; i++) {
 		wxString nomWX = files.FindName(i);
 		wxString pathWX = files.FindPath(nomWX);
 		std::string path = pathWX.ToStdString();
-		myFile << path << "\n" ;
+		filePartition << path << "\n" ;
+		WriteAnnotation(nomWX);
 		};
-	myFile.close();
+	filePartition.close();
 }
 
 void LiseusePanel::BestSize()
