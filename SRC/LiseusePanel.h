@@ -46,6 +46,7 @@ enum
 struct Annotation {
   wxString note;
   wxPoint pt;
+  unsigned int pageNumber;
 };
 
 struct File {
