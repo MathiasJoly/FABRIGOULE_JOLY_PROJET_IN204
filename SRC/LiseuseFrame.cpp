@@ -27,16 +27,16 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 {
 	wxMenu *menuFile = new wxMenu();
 
-	menuFile->Append(ID_NEW, _T("&New image(s) ..."));
-	menuFile->Append(ID_OPEN, _T("&Open image file ..."));
-	menuFile->Append(ID_SAVE, _T("&Save image as..."));
+	menuFile->Append(ID_NEW, _T("&New"));
+	menuFile->Append(ID_OPEN, _T("&Open"));
+	menuFile->Append(ID_WRITE_FILE, _T("&Save"));
 	menuFile->AppendSeparator();
-	menuFile->Append(ID_WRITE_FILE, _T("&Write file..."));
+	menuFile->Append(ID_SAVE, _T("&Export"));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_QUIT, _T("&Exit"));
 
 	wxMenu *menuHelp = new wxMenu();
-	menuHelp->Append(ID_ABOUT, _T("&About..."));
+	menuHelp->Append(ID_ABOUT, _T("&About"));
 
 	wxMenu *menuView = new wxMenu();
 /*	menuView->Append(ID_ZOOM, "&Zoom");
