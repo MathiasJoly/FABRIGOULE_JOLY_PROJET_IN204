@@ -174,7 +174,6 @@ void LiseuseFrame::OnSmall(wxCommandEvent& WXUNUSED(event)) {
 	panel->pageHeight = 400;
 	panel->imagesLoaded = false;
 	panel->files.GetPaths(&filesPaths);
-	std::cout << "check\n";
 	panel->NewImages(filesPaths);
 }
 
@@ -183,7 +182,6 @@ void LiseuseFrame::OnMedium(wxCommandEvent& WXUNUSED(event)) {
 	panel->pageHeight = 600;
 	panel->imagesLoaded = false;
 	panel->files.GetPaths(&filesPaths);
-	std::cout << "check\n";
 	panel->NewImages(filesPaths);
 }
 
@@ -192,7 +190,6 @@ void LiseuseFrame::OnLarge(wxCommandEvent& WXUNUSED(event)) {
 	panel->pageHeight = 800;
 	panel->imagesLoaded = false;
 	panel->files.GetPaths(&filesPaths);
-	std::cout << "check\n";
 	panel->NewImages(filesPaths);
 }
 
@@ -201,12 +198,10 @@ void LiseuseFrame::OnExtraLarge(wxCommandEvent& WXUNUSED(event)) {
 	panel->pageHeight = 1000;
 	panel->imagesLoaded = false;
 	panel->files.GetPaths(&filesPaths);
-	std::cout << "check\n";
 	panel->NewImages(filesPaths);
 }
 
 void LiseuseFrame::ResizePanel(wxSizeEvent& event) {
-	std::cout << "Frame is resized\n";
 	panel->SetSize(GetClientSize());
 }
 

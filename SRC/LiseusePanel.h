@@ -101,23 +101,17 @@ struct Files {
 	}
 
   void ChangePageCaseSwap(unsigned int pageNb, wxArrayString pagesArrayNew, wxArrayString pagesArray) {
-    std::cout << "ChangePagePosition is called\n";
     for (int i=0; i < vector.size(); i++) {
-      std::cout << "Case Swap : file pageNumber was " << vector.at(i).pageNumber << "\n";
       if (vector.at(i).pageNumber == pageNb)
         vector.at(i).pageNumber = pageNb+1;
       else if (vector.at(i).pageNumber == pageNb+1)
         vector.at(i).pageNumber = pageNb;
-      std::cout << "Case Swap : file pageNumber is " << vector.at(i).pageNumber << "\n";
     };
   };
 
   void ChangePageCaseDelete() {
-    std::cout << "ChangePagePosition is called\n";
     for (int i=0; i < vector.size(); i++) {
-      std::cout << "Case Delete : file pageNumber was " << vector.at(i).pageNumber << "\n";
 			--(vector.at(i).pageNumber);// == (vector.at(i).pageNumber - 1);
-      std::cout << "Case Delete : file pageNumber is " << vector.at(i).pageNumber << "\n";
     };
   };
 };

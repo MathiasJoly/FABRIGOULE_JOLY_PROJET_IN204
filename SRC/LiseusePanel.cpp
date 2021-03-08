@@ -200,7 +200,6 @@ void LiseusePanel::UpdatePagesVector() {
 			wxString filePath = files.FindPath(fileName);
 
 			if ((pagesArray.GetCount() == pagesArrayNew.GetCount()) && (i<nbPages-1) && fileName == pagesArray.Item(i+1)) {
-							std::cout << "We launch ChangeAnnotationsPlacements\n";
 							ChangeAnnotationsCaseSwap(i);
 							files.ChangePageCaseSwap(i, pagesArrayNew, pagesArray);
 						};
@@ -239,18 +238,14 @@ void LiseusePanel::ChangeAnnotationsCaseSwap(unsigned int pageNb) {
 
 void LiseusePanel::ChangeAnnotationsCaseDelete() {
 	for (int i=0; i<nbPages; i++) {
-		std::cout << "annotation n° " << i << " has pgNb " << annotations.at(i).pageNumber << "\n";
 		if (annotations.at(i).pageNumber == 0) {
 			Annotation temp = annotations.back();
 			annotations.at(i) = annotations.back();
 			annotations.pop_back();
-			std::cout << "pageNb of erased annotation is " << annotations.at(i).pageNumber << "\n";
 			i--;
 		}
 		else {
-			std::cout << "annotation n° " << i << " had pgNb " << annotations.at(i).pageNumber << "\n";
 			annotations.at(i).pageNumber = annotations.at(i).pageNumber - 1;
-			std::cout << "annotation n° " << i << " has now pgNb " << annotations.at(i).pageNumber << "\n";
 		}
 	}
 }
@@ -320,7 +315,6 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
 {
 	Annotation temp_annotation = {.note = myNote, .pt = myPt, .pageNumber = temp_annotation.pt.x / pageWidth};
-	std::cout << "Annotation on page " << temp_annotation.pageNumber << "\n";
 	temp_annotation.pt.x = temp_annotation.pt.x % pageWidth;
 	annotations.push_back(temp_annotation);
 }
