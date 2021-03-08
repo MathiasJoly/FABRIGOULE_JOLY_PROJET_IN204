@@ -19,6 +19,8 @@
 #include <wx/arrstr.h>
 #include <wx/string.h>
 #include <wx/listctrl.h>
+#include <iostream>
+#include <fstream>
 
 #include "LiseuseApp.h"
 
@@ -37,6 +39,7 @@ enum
     ID_DISPLAY = 12,
     ID_PDF = 13,
     ID_ORDER = 14,
+    ID_WRITE_FILE = 15
 };
 
 struct Annotation {
@@ -102,6 +105,7 @@ public:
 	void SaveImage(wxString filePath) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
+	void WriteFile(std::string Nom);
 	void OnRightClick(wxMouseEvent& event);
   void OnListboxLDown(wxMouseEvent& event);
   void OnMouseDown(wxMouseEvent & event);

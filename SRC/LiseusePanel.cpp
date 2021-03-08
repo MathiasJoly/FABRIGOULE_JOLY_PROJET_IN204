@@ -95,6 +95,18 @@ void LiseusePanel::SaveImage(wxString filePath)
 		wxMessageBox(wxT("A problem occured during saving"));
 }
 
+void LiseusePanel::WriteFile(std::string Nom)
+{
+	std::ofstream myFile;
+	myFile.open(Nom);
+	for(unsigned int i=0; i<nbPages; i++) {
+		wxString nomWX = files.FindName(i);
+		std::string nom = nomWX.ToStdString();
+		myFile << nom << "\n" ;
+		};
+	myFile.close();
+}
+
 void LiseusePanel::BestSize()
 {
 	SetSize(imageWidth, imageHeight) ;	// ideal size for canvas

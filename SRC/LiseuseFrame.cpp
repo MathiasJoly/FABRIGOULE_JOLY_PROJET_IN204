@@ -6,6 +6,7 @@
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
+	EVT_MENU(ID_WRITE_FILE, LiseuseFrame::OnWriteFile)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
 	EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
@@ -20,8 +21,10 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 {
 	wxMenu *menuFile = new wxMenu();
 
-	menuFile->Append(ID_LOAD, _T("&Open image..."));
+	menuFile->Append(ID_OPEN, _T("&Open image..."));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
+	menuFile->AppendSeparator();
+	menuFile->Append(ID_WRITE_FILE, _T("&Write file..."));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_QUIT, _T("&Exit"));
 
@@ -99,6 +102,7 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 	panel->LoadImages(filesPaths);
 	imageLoaded = true;
 }
+
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
 //	char str[128] = "" ; // proposed file name
@@ -109,6 +113,21 @@ void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 	wxString filePath = wxFileSelector(_T("Save image as"),_T(""),_T(""),_T("*.bmp"), _T("BMP files (*.bmp)|*.bmp|GIF files (*gif)|*.gif|JPEG files (*jpg)|*.jpg|PNG files (*png)|*.png|TIFF files (*tif)|*.tif|XPM files (*xpm)|*.xpm|All files (*.*)|*.*"), wxFD_SAVE );
 	if ( !filePath.empty() )
 		panel->SaveImage(filePath) ;
+}
+
+void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
+{
+	if(!imageLoaded)
+		return ;
+
+	wxTextEntryDialog dlg(this,_T("Choisissez un nom pour cette partition!"),_T("Liste des images :"));
+	if ( dlg.ShowModal() == wxID_OK )
+	{
+		wxString nomWX = dlg.GetValue();
+		std::string nom = nomWX.ToStdString();
+		std::string extension = ".partition";
+		panel->WriteFile(nom.append(suffixe));
+	};
 }
 
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))

@@ -3,8 +3,11 @@
 
 #include "LiseuseApp.h"
 #include "LiseusePanel.h"
+
 #include <wx/filedlg.h>
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 class LiseuseFrame: public wxFrame
 {
@@ -17,15 +20,16 @@ public:
 protected:
 	void OnQuit(wxCommandEvent& event);
 	void OnOrder(wxCommandEvent& event);
-  void OnAbout(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
 	void OnOpen(wxCommandEvent& event);
 	void OnSyncSetting(wxCommandEvent& event);
 	void OnZoom(wxCommandEvent& event);
 	void OnDisplay(wxCommandEvent& event);
-	void OnBestSize(wxCommandEvent& WXUNUSED(event)) ;
-	void OnOpenImage(wxCommandEvent& WXUNUSED(event) ) ;
-	void OnSaveImage(wxCommandEvent & WXUNUSED(event)) ;
-	void OnClose(wxCloseEvent& event) ;
+	void OnBestSize(wxCommandEvent& WXUNUSED(event));
+	void OnOpenImage(wxCommandEvent& WXUNUSED(event));
+	void OnSaveImage(wxCommandEvent & WXUNUSED(event));
+	void OnWriteFile(wxCommandEvent & WXUNUSED(event));
+	void OnClose(wxCloseEvent& event);
 
 	wxImage tempImage;
 	std::vector<wxImage> pagesVector;
