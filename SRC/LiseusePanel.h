@@ -21,6 +21,7 @@
 #include <wx/listctrl.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "LiseuseApp.h"
 
@@ -111,6 +112,8 @@ public:
   void OnListboxLDown(wxMouseEvent& event);
   void OnMouseDown(wxMouseEvent & event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+	void ReadAnnotation(wxString fileName);
+	void WriteAnnotation(wxString fileName);
 //	void LoadPagesVector(std::vector<wxImage> vector);
 
 	wxImage LoadImage(wxString fileName) ;
