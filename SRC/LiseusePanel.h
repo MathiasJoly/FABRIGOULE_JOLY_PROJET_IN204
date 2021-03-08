@@ -37,6 +37,10 @@ enum
     ID_DISPLAY = 12,
     ID_PDF = 13,
     ID_ORDER = 14,
+    ID_SMALL = 15,
+    ID_MEDIUM = 16,
+    ID_LARGE = 17,
+    ID_EXTRA_LARGE = 18,
 };
 
 struct Annotation {
@@ -78,12 +82,13 @@ struct Files {
   		};
 	};
 
-	wxArrayString GetPaths() {
-  	wxArrayString paths = {};
-  	for (int i=0; i<vector.size(); i++) {
-  		paths.Add(vector[i].name);
+	wxArrayString GetPaths(wxArrayString* paths) {
+    *paths = {};
+    std::cout << "vector size" <<vector.size() <<"\n";
+    for (int i=0; i<vector.size(); i++) {
+      std::cout << "check in GetPaths : "<<i<<"\n";
+  		(*paths).Add(vector[i].path);
   		};
-  	return paths;
 	};
 
 	void SetPageNumber(wxString fileName, int num) {
@@ -137,6 +142,8 @@ class LiseusePanel: public wxScrolled<wxPanel>
     unsigned int nbPages;
     unsigned int pageWidth;
     unsigned int pageHeight;
+    wxArrayString pagesArray;
+    Files files;
 
 
   private:
@@ -145,9 +152,7 @@ class LiseusePanel: public wxScrolled<wxPanel>
   	wxBitmap imageBitmap ;		// used to display the image
   	wxImage *imageRGB ;		// used to load the image
     std::vector<Annotation> annotations;
-    wxArrayString pagesArray;
     wxArrayString pagesArrayNew;
-    Files files;
 
 
     void UpdatePagesVector();

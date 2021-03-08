@@ -19,8 +19,8 @@ LiseusePanel::LiseusePanel( wxWindow *parent, wxWindowID id,const wxPoint &pos, 
 	this->ShowScrollbars(wxSHOW_SB_ALWAYS,wxSHOW_SB_DEFAULT);
 	cursor = new wxPoint(0,0);
 	annotations.resize(0);
-	pageWidth = 657;
-	pageHeight = 850;
+	pageWidth = 618;
+	pageHeight = 800;
 	wxSize pagesOrderListSize = wxSize(700,150);
 	wxPoint* pagesOrderListPos = new wxPoint(0,0);
 	pagesOrderList = new wxEditableListBox(GetParent(), 50, "Pages order", *pagesOrderListPos, pagesOrderListSize, wxEL_ALLOW_DELETE);
@@ -35,11 +35,13 @@ LiseusePanel::~LiseusePanel()
 void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	imagesLoaded = false;
 	nbPages = filesPaths.GetCount();
+	std::cout << "there is this nb of pages to load " << nbPages << "\n";
 	pagesVector.resize(nbPages);
 	files.vector = {};
 	for(unsigned int i=0; i<nbPages; i++) {
 
 		wxString filePath = filesPaths.Item(i);
+		std::cout << "filesPath(i) : " << filesPaths.Item(i)	<< "\n";
 		wxString fileName = filePath.AfterLast('/');
 		File file = {.name = fileName, .path = filePath, .pageNumber = i};
 		files.vector.push_back(file);
@@ -48,10 +50,12 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 				delete imageRGB;
 
 			// open image dialog box
+			std::cout << "file path : " << filePath	<< "\n";
 			imageRGB = new wxImage(filePath, wxBITMAP_TYPE_ANY, -1);
+			std::cout << imageRGB->IsOk() << " : there is data in imageRGB\n";
 			// ANY => can load many image formats
-			imageWidth = imageRGB->GetWidth();
-			imageHeight = imageRGB->GetHeight();
+//			imageWidth = imageRGB->GetWidth();
+	//		imageHeight = imageRGB->GetHeight();
 			imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
 			wxImage tempImage = imageRGB->Copy();
 			pagesVector.at(i) = tempImage;
@@ -63,6 +67,8 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 			else
 				SetSize(pageWidth, pageHeight);
 			GetParent()->SetClientSize(GetSize());
+//			Fit();
+//			SetClientSize(GetParent()->GetSize());
 			// update display
 			Refresh(false);
 		}
@@ -107,6 +113,8 @@ void LiseusePanel::BestSize()
 void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 // update the main window content. Appelé avec Refresh()
 {
+	std::cout << "OnPaint is called" << "\n";
+
 	pagesOrderList->GetStrings(pagesArrayNew);
 	if (imagesLoaded)
 		UpdatePagesVector();

@@ -22,10 +22,15 @@ protected:
 	void OnSyncSetting(wxCommandEvent& event);
 	void OnZoom(wxCommandEvent& event);
 	void OnDisplay(wxCommandEvent& event);
-	void OnBestSize(wxCommandEvent& WXUNUSED(event)) ;
+	void OnBestSize(wxCommandEvent& WXUNUSED(event));
+	void OnSmall(wxCommandEvent& WXUNUSED(event));
+	void OnMedium(wxCommandEvent& WXUNUSED(event));
+	void OnLarge(wxCommandEvent& WXUNUSED(event));
+	void OnExtraLarge(wxCommandEvent& WXUNUSED(event));
 	void OnOpenImage(wxCommandEvent& WXUNUSED(event) ) ;
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event)) ;
 	void OnClose(wxCloseEvent& event) ;
+	void ResizePanel(wxSizeEvent& event);
 
 	wxImage tempImage;
 	std::vector<wxImage> pagesVector;

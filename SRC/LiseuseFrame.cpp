@@ -9,8 +9,13 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
 	EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
+	EVT_MENU(ID_SMALL,  LiseuseFrame::OnSmall)
+//	EVT_MENU(ID_MEDIUM,  LiseuseFrame::OnMedium)
+	//EVT_MENU(ID_LARGE,  LiseuseFrame::OnLarge)
+//	EVT_MENU(ID_EXTRA_LARGE,  LiseuseFrame::OnExtraLarge)
 	EVT_MENU(ID_ORDER, LiseuseFrame::OnOrder)
 	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
+	EVT_SIZE(LiseuseFrame::ResizePanel)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -34,7 +39,11 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuView->Append(ID_DISPLAY, "&Display");
 	menuView->Append(ID_BEST_SIZE, _T("&Best size"));*/
 	menuView->Append(ID_ORDER, _T("&Order"));
-
+	menuView->AppendSeparator();
+	menuView->Append(ID_SMALL, _T("&Small"));
+	menuView->Append(ID_MEDIUM, _T("&Medium"));
+	menuView->Append(ID_LARGE, _T("&Large"));
+	menuView->Append(ID_EXTRA_LARGE, _T("&Extra Large"));
 	wxMenuBar *menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, _T("&File"));
 	menuBar->Append(menuHelp, _T("&Help"));
@@ -96,6 +105,8 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 			return; // the user changed idea
 
 	openFileDialog.GetPaths(filesPaths);
+	std::cout << "GetPaths(filesPath)(0) : " << filesPaths.Item(0)	<< "\n";
+	std::cout << "filesPath.GetCount : " << filesPaths.GetCount()	<< "\n";
 	panel->LoadImages(filesPaths);
 	imageLoaded = true;
 }
@@ -114,6 +125,20 @@ void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))
 {
     panel->BestSize() ;
+}
+
+void LiseuseFrame::OnSmall(wxCommandEvent& WXUNUSED(event)) {
+	panel->pageWidth = 231;
+	panel->pageHeight = 300;
+	panel->imagesLoaded = false;
+	panel->files.GetPaths(&filesPaths);
+	std::cout << "check\n";
+	panel->LoadImages(filesPaths);
+}
+
+void LiseuseFrame::ResizePanel(wxSizeEvent& event) {
+	std::cout << "Frame is resized\n";
+	panel->SetSize(GetClientSize());
 }
 
 #endif

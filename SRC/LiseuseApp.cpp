@@ -12,7 +12,9 @@ bool LiseuseApp::OnInit()
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 
     LiseuseFrame* frame = new LiseuseFrame(_T(APP_NAME), wxDefaultPosition, wxSize(400,300));
-
+    sizer->Add(frame->panel);
+/*    frame->SetSizer(sizer);
+    frame->Refresh();*/
     frame->Show(true) ;
     SetTopWindow(frame) ;
 
