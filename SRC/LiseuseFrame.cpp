@@ -11,6 +11,10 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
 	EVT_MENU(ID_ABOUT, LiseuseFrame::OnAbout)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
+	EVT_MENU(ID_SMALL,  LiseuseFrame::OnSmall)
+	EVT_MENU(ID_MEDIUM,  LiseuseFrame::OnMedium)
+	EVT_MENU(ID_LARGE,  LiseuseFrame::OnLarge)
+	EVT_MENU(ID_EXTRA_LARGE,  LiseuseFrame::OnExtraLarge)
 	EVT_MENU(ID_ORDER, LiseuseFrame::OnOrder)
 	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
 	EVT_SIZE(LiseuseFrame::ResizePanel)
@@ -40,6 +44,11 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	menuView->Append(ID_DISPLAY, "&Display");
 	menuView->Append(ID_BEST_SIZE, _T("&Best size"));*/
 	menuView->Append(ID_ORDER, _T("&Order"));
+	menuView->AppendSeparator();
+	menuView->Append(ID_SMALL, _T("&Small"));
+	menuView->Append(ID_MEDIUM, _T("&Medium"));
+	menuView->Append(ID_LARGE, _T("&Large"));
+	menuView->Append(ID_EXTRA_LARGE, _T("&Extra Large"));
 
 	wxMenuBar *menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, _T("&File"));
@@ -158,6 +167,42 @@ void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))
 {
     panel->BestSize() ;
+}
+
+void LiseuseFrame::OnSmall(wxCommandEvent& WXUNUSED(event)) {
+	panel->pageWidth = 308;
+	panel->pageHeight = 400;
+	panel->imagesLoaded = false;
+	panel->files.GetPaths(&filesPaths);
+	std::cout << "check\n";
+	panel->NewImages(filesPaths);
+}
+
+void LiseuseFrame::OnMedium(wxCommandEvent& WXUNUSED(event)) {
+	panel->pageWidth = 462;
+	panel->pageHeight = 600;
+	panel->imagesLoaded = false;
+	panel->files.GetPaths(&filesPaths);
+	std::cout << "check\n";
+	panel->NewImages(filesPaths);
+}
+
+void LiseuseFrame::OnLarge(wxCommandEvent& WXUNUSED(event)) {
+	panel->pageWidth = 618;
+	panel->pageHeight = 800;
+	panel->imagesLoaded = false;
+	panel->files.GetPaths(&filesPaths);
+	std::cout << "check\n";
+	panel->NewImages(filesPaths);
+}
+
+void LiseuseFrame::OnExtraLarge(wxCommandEvent& WXUNUSED(event)) {
+	panel->pageWidth = 772;
+	panel->pageHeight = 1000;
+	panel->imagesLoaded = false;
+	panel->files.GetPaths(&filesPaths);
+	std::cout << "check\n";
+	panel->NewImages(filesPaths);
 }
 
 void LiseuseFrame::ResizePanel(wxSizeEvent& event) {

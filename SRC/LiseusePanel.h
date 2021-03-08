@@ -39,7 +39,11 @@ enum
     ID_DISPLAY = 12,
     ID_PDF = 13,
     ID_ORDER = 14,
-    ID_WRITE_FILE = 15
+    ID_WRITE_FILE = 15,
+    ID_SMALL = 16,
+    ID_MEDIUM = 17,
+    ID_LARGE = 18,
+    ID_EXTRA_LARGE = 19,
 };
 
 struct Annotation {
@@ -81,9 +85,10 @@ struct Files {
 	}
 
 	void GetPaths(wxArrayString* paths) {
-	for (int i=0; i<vector.size(); i++) {
-		(*paths).Add(vector[i].path);
-		};
+    *paths = {};
+	   for (int i=0; i<vector.size(); i++) {
+		     (*paths).Add(vector[i].path);
+		 };
 	}
 
 	void SetPageNumber(wxString fileName, int num) {
@@ -142,6 +147,7 @@ public:
   unsigned int pageWidth;
   unsigned int pageHeight;
   bool imagesLoaded;
+  Files files;
 
 
 private:
@@ -152,7 +158,6 @@ private:
   std::vector<Annotation> annotations;
   wxArrayString pagesArray;
   wxArrayString pagesArrayNew;
-  Files files;
 
   void SetPosition(const wxPoint& position);
   void UpdatePagesVector();
