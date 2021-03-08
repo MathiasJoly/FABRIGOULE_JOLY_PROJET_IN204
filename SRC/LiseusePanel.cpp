@@ -73,7 +73,7 @@ void LiseusePanel::NewImages(wxArrayString filesPaths) {
 }
 
 void LiseusePanel::OpenImages(std::string Nom) {
-/*
+
 	std::ifstream myFile;
 	myFile.open(Nom);
 	nbPages = 0;
@@ -115,7 +115,7 @@ void LiseusePanel::OpenImages(std::string Nom) {
 	files.GetNames(&fileNames);
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
-*/
+
 }
 
 void LiseusePanel::SaveImage(wxString filePath)
@@ -147,8 +147,9 @@ void LiseusePanel::WriteFile(std::string Nom)
 	myFile.open(Nom);
 	for(unsigned int i=0; i<nbPages; i++) {
 		wxString nomWX = files.FindName(i);
-		std::string nom = nomWX.ToStdString();
-		myFile << nom << "\n" ;
+		wxString pathWX = files.FindPath(nomWX);
+		std::string path = pathWX.ToStdString();
+		myFile << path << "\n" ;
 		};
 	myFile.close();
 }
