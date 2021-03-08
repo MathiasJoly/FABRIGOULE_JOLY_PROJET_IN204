@@ -33,6 +33,7 @@ LiseusePanel::~LiseusePanel()
 }
 
 void LiseusePanel::NewImages(wxArrayString filesPaths) {
+	imagesLoaded = false;
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
 	files.vector.resize(nbPages);
@@ -70,10 +71,11 @@ void LiseusePanel::NewImages(wxArrayString filesPaths) {
 	files.GetNames(&fileNames);
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
+	imagesLoaded = true;
 }
 
 void LiseusePanel::OpenImages(std::string Nom) {
-
+	imagesLoaded = false;
 	std::ifstream myFile;
 	myFile.open(Nom);
 	nbPages = 0;
@@ -97,17 +99,17 @@ void LiseusePanel::OpenImages(std::string Nom) {
 		pagesVector.push_back(tempImage);
 	}
 
-	for(unsigned int i=0; i<nbPages; i++) 
+	for(unsigned int i=0; i<nbPages; i++)
 	{
 		SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
-	
+
 		if (nbPages > 1)
 			SetSize(2*pageWidth, pageHeight);
 		else
 			SetSize(pageWidth, pageHeight);
-	
+
 		GetParent()->SetClientSize(GetSize());
-	
+
 		Refresh(false);
 	};
 
@@ -115,7 +117,7 @@ void LiseusePanel::OpenImages(std::string Nom) {
 	files.GetNames(&fileNames);
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
-
+	imagesLoaded = true;
 }
 
 void LiseusePanel::SaveImage(wxString filePath)
@@ -164,7 +166,8 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 // update the main window content. Appelé avec Refresh()
 {
 	pagesOrderList->GetStrings(pagesArrayNew);
-	UpdatePagesVector();
+	if (imagesLoaded)
+		UpdatePagesVector();
 	wxPaintDC dc(this);
 	DoPrepareDC(dc);
 	wxFont* font = new wxFont(wxFontInfo(8));
@@ -178,7 +181,8 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 		}
 		for (int i=0; i < annotations.size(); i++) {
 			// Show annotations
-			dc.DrawText(annotations.at(i).note,annotations.at(i).pt.x-3,annotations.at(i).pt.y-11);
+			Annotation annotation = annotations.at(i);
+			dc.DrawText(annotation.note,annotation.pt.x-3 + pageWidth*annotation.pageNumber, annotation.pt.y-11);
 		};
 	};
 }
@@ -186,9 +190,20 @@ void LiseusePanel::OnPaint(wxPaintEvent &WXUNUSED(event))
 void LiseusePanel::UpdatePagesVector() {
 	if (pagesArray != pagesArrayNew) {
 		nbPages = pagesArrayNew.GetCount();
-		for(int i=0; i<nbPages; i++) {
+/*		if (pagesArray.GetCount() != pagesArrayNew.GetCount()) {
+			std::cout << "We launch ChangeAnnotationsCaseDelete\n";
+			ChangeAnnotationsCaseDelete();
+			files.ChangePageCaseDelete();
+		}
+*/		for(int i=0; i<nbPages; i++) {
 			wxString fileName = pagesArrayNew.Item(i);
 			wxString filePath = files.FindPath(fileName);
+
+			if ((pagesArray.GetCount() == pagesArrayNew.GetCount()) && (i<nbPages-1) && fileName == pagesArray.Item(i+1)) {
+							std::cout << "We launch ChangeAnnotationsPlacements\n";
+							ChangeAnnotationsCaseSwap(i);
+							files.ChangePageCaseSwap(i, pagesArrayNew, pagesArray);
+						};
 
 			if ( !filePath.empty() ) {
 				if (imageRGB)
@@ -210,6 +225,33 @@ void LiseusePanel::UpdatePagesVector() {
 			}
 		}
 	pagesArray = pagesArrayNew;
+	}
+}
+
+void LiseusePanel::ChangeAnnotationsCaseSwap(unsigned int pageNb) {
+	for (int i=0; i < annotations.size(); i++) {
+		if (annotations.at(i).pageNumber == pageNb)
+			annotations.at(i).pageNumber = pageNb+1;
+		else if (annotations.at(i).pageNumber == pageNb+1)
+			annotations.at(i).pageNumber = pageNb;
+	}
+}
+
+void LiseusePanel::ChangeAnnotationsCaseDelete() {
+	for (int i=0; i<nbPages; i++) {
+		std::cout << "annotation n° " << i << " has pgNb " << annotations.at(i).pageNumber << "\n";
+		if (annotations.at(i).pageNumber == 0) {
+			Annotation temp = annotations.back();
+			annotations.at(i) = annotations.back();
+			annotations.pop_back();
+			std::cout << "pageNb of erased annotation is " << annotations.at(i).pageNumber << "\n";
+			i--;
+		}
+		else {
+			std::cout << "annotation n° " << i << " had pgNb " << annotations.at(i).pageNumber << "\n";
+			annotations.at(i).pageNumber = annotations.at(i).pageNumber - 1;
+			std::cout << "annotation n° " << i << " has now pgNb " << annotations.at(i).pageNumber << "\n";
+		}
 	}
 }
 
@@ -255,7 +297,7 @@ void LiseusePanel::OnRightClick(wxMouseEvent& event)
 			tempFrame.Close();
 		}
 		else
-		{ 
+		{
 			tempFrame.Show(true);
 			wxTextEntryDialog dlg2(&tempFrame,_T("Ecrivez votre annotation!"),_T("Annotation :"));
 			if ( dlg2.ShowModal() == wxID_OK )
@@ -277,7 +319,9 @@ void LiseusePanel::OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
 
 void LiseusePanel::Annoter(wxString myNote, wxPoint myPt)
 {
-	Annotation temp_annotation = {.note = myNote, .pt = myPt};
+	Annotation temp_annotation = {.note = myNote, .pt = myPt, .pageNumber = temp_annotation.pt.x / pageWidth};
+	std::cout << "Annotation on page " << temp_annotation.pageNumber << "\n";
+	temp_annotation.pt.x = temp_annotation.pt.x % pageWidth;
 	annotations.push_back(temp_annotation);
 }
 
