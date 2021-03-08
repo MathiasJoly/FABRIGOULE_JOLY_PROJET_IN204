@@ -30,6 +30,7 @@ protected:
 	void OnOpenImage(wxCommandEvent& WXUNUSED(event));
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event));
 	void OnWriteFile(wxCommandEvent & WXUNUSED(event));
+	void ResizePanel(wxSizeEvent& event);
 	void OnClose(wxCloseEvent& event);
 
 	wxImage tempImage;

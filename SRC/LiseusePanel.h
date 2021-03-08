@@ -45,6 +45,7 @@ enum
 struct Annotation {
   wxString note;
   wxPoint pt;
+  unsigned int pageNumber;
 };
 
 struct File {
@@ -93,7 +94,7 @@ struct Files {
 		};
 	if (!succes) std::cout << "No such a file in opened pages" << "\n";
 	}
-	
+
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>

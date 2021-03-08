@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_BEST_SIZE,  LiseuseFrame::OnBestSize)
 	EVT_MENU(ID_ORDER, LiseuseFrame::OnOrder)
 	EVT_LEFT_DOWN(LiseuseFrame::OnListboxLDown)
+	EVT_SIZE(LiseuseFrame::ResizePanel)
 	EVT_CLOSE(LiseuseFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -157,6 +158,11 @@ void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))
 {
     panel->BestSize() ;
+}
+
+void LiseuseFrame::ResizePanel(wxSizeEvent& event) {
+	std::cout << "Frame is resized\n";
+	panel->SetSize(GetClientSize());
 }
 
 #endif
