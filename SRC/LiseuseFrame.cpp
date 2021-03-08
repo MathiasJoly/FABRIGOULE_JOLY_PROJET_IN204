@@ -6,6 +6,7 @@
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_NEW,  LiseuseFrame::OnNewImage)
 	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpenImage)
+	EVT_MENU(ID_PDF, LiseuseFrame::OnOpenPDF)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
 	EVT_MENU(ID_WRITE_FILE, LiseuseFrame::OnWriteFile)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
@@ -24,6 +25,7 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 
 	menuFile->Append(ID_NEW, _T("&New image(s) ..."));
 	menuFile->Append(ID_OPEN, _T("&Open image file ..."));
+	menuFile->Append(ID_PDF, _T("&Open pdf file ..."));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_WRITE_FILE, _T("&Write file..."));
@@ -118,6 +120,18 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 	std::string filePath = filePathWX.ToStdString();
 	panel->OpenImages(filePath);
 	imageLoaded = true;
+}
+
+void LiseuseFrame::OnOpenPDF(wxCommandEvent& WXUNUSED(event) )
+{
+
+	wxFileDialog openFileDialog(this, _("Open PDF"), "", "", "PDF files (*.pdf)|*.pdf", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return; // the user changed idea
+
+	wxString fileName = openFileDialog.GetPath();
+	panel->PrintPDF(fileName);
 }
 
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))

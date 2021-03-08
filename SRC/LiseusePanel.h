@@ -103,6 +103,7 @@ public:
     ~LiseusePanel() ;
   	void NewImages(wxArrayString filesPaths);
 	void OpenImages(std::string Nom);
+	void PrintPDF(wxString filePath);
 	void SaveImage(wxString filePath) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;

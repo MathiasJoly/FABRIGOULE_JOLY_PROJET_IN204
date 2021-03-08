@@ -118,6 +118,40 @@ void LiseusePanel::OpenImages(std::string Nom) {
 
 }
 
+void LiseusePanel::PrintPDF(wxString filePath)
+{
+	wxString pdfFileName = filePath.AfterLast('/');
+	wxFileType* pdfFileType = wxTheMimeTypesManager->GetFileTypeFromExtension(wxT("pdf"));
+	if (pdfFileType != NULL)
+	{
+		// Open PDF file in PDF reader
+		/*
+		wxString pdfOpen = pdfFileType ->GetOpenCommand(pdfFileName);
+		if (!pdfOpen.IsEmpty())
+		{
+			long rc = wxExecute(pdfOpen);
+		};
+		*/
+		// ... or print PDF file
+		wxString pdfMimeType;
+		bool ok = pdfFileType->GetMimeType(&pdfMimeType);
+		if (ok)
+		{
+			std::cout << "Check Print\n" ;
+			wxString* pdfPrint = new wxString();
+			wxFileType::MessageParameters wxMP = wxFileType::MessageParameters(pdfFileName, pdfMimeType);
+			ok = pdfFileType->GetPrintCommand(pdfPrint, wxMP);
+			if (ok)	
+			{
+				std::cout << "Check Execute\n" ;
+				long rc = wxExecute(*pdfPrint);
+			};
+		};
+		std::cout << "Check\n" ;
+	};
+}
+// Error handling if one of the above methods failed
+
 void LiseusePanel::SaveImage(wxString filePath)
 {
 	bool b ;
