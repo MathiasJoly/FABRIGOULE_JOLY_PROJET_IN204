@@ -43,22 +43,76 @@ struct Annotation {
   wxString note;
   wxPoint pt;
   unsigned int pageNumber;
+};
 
-  void ChangePlacement
+struct File {
+	wxString name;
+	wxString path;
+	unsigned int pageNumber;
 };
 
 struct Files {
-  wxArrayString names;
-  wxArrayString paths;
+	std::vector<File> vector;
 
-  wxString findPath(wxString fileName) {
-    for (int i=0; i<names.GetCount(); i++) {
-      if (fileName == names.Item(i))
-        return paths.Item(i);
-    }
-      std::cout << "No such a file in opened pages" << "\n";
-      return ("");
-  }
+	wxString FindName(int num) {
+  	for (int i=0; i<vector.size(); i++) {
+  		if (num == vector[i].pageNumber)
+  		return vector[i].name;
+  		}
+  	return ("");
+  };
+
+	wxString FindPath(wxString fileName) {
+  	for (int i=0; i<vector.size(); i++) {
+  		if (fileName == vector[i].name)
+  		return vector[i].path;
+  		}
+  	std::cout << "No such a file in opened pages" << "\n";
+  	return ("");
+	};
+
+	void GetNames(wxArrayString* names) {
+    *names = {};
+  	for (int i=0; i<vector.size(); i++) {
+  		(*names).Add(vector[i].name);
+  		};
+	};
+
+	wxArrayString GetPaths() {
+  	wxArrayString paths = {};
+  	for (int i=0; i<vector.size(); i++) {
+  		paths.Add(vector[i].name);
+  		};
+  	return paths;
+	};
+
+	void SetPageNumber(wxString fileName, int num) {
+  	bool succes = false;
+  	for (int i=0; i<vector.size(); i++) {
+  		succes = fileName == vector[i].name ;
+  		if (succes) vector[i].pageNumber = num ;
+  		};
+  	if (!succes) std::cout << "No such a file in opened pages" << "\n";
+	};
+
+  void ChangePagePosition(unsigned int pageNb, wxArrayString pagesArrayNew, wxArrayString pagesArray) {
+    std::cout << "ChangePagePosition is called\n";
+    if (pagesArrayNew.GetCount() < pagesArray.GetCount()) {
+      std::cout << "Case Delete : file pageNumber was " << vector.at(pageNb).pageNumber << "\n";
+			    --(vector.at(pageNb).pageNumber);// == (vector.at(i).pageNumber - 1);
+      std::cout << "Case Delete : file pageNumber is " << vector.at(pageNb).pageNumber << "\n";
+  		}
+  	else {
+      for (int i=0; i < vector.size(); i++) {
+        std::cout << "Case Swap : file pageNumber was " << vector.at(i).pageNumber << "\n";
+        if (vector.at(i).pageNumber == pageNb)
+          vector.at(i).pageNumber = pageNb+1;
+        else if (vector.at(i).pageNumber == pageNb+1)
+          vector.at(i).pageNumber = pageNb;
+        std::cout << "Case Swap : file pageNumber is " << vector.at(i).pageNumber << "\n";
+      };
+    };
+  };
 };
 
 class LiseusePanel: public wxScrolled<wxPanel>
@@ -74,9 +128,10 @@ class LiseusePanel: public wxScrolled<wxPanel>
     void OnListboxLDown(wxMouseEvent& event);
     void OnMouseDown(wxMouseEvent & event);
   	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-    void ChangeAnnotationsPlacements(unsigned int PageNumberEx, unsigned int PageNumberNew);
+    void ChangeAnnotationsPlacements(unsigned int PageNumber);
 
   	wxPoint *cursor;
+    bool imagesLoaded;
     std::vector<wxImage> pagesVector;
     wxEditableListBox* pagesOrderList;
     unsigned int nbPages;
