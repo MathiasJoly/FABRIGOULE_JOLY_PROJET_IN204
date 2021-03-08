@@ -28,7 +28,7 @@ enum
 {
     ID_QUIT = 1,
     ID_ABOUT = 2,
-    ID_LOAD = 3,
+    ID_NEW = 3,
     ID_NOTE = 4,
     ID_SAVE = 5,
     ID_BEST_SIZE = 7,
@@ -101,7 +101,8 @@ class LiseusePanel: public wxScrolled<wxPanel>
 public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
-  void LoadImages(wxArrayString filesPaths);
+  	void NewImages(wxArrayString filesPaths);
+//	void OpenFile(wxString filePath);
 	void SaveImage(wxString filePath) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;

@@ -26,7 +26,8 @@ protected:
 	void OnZoom(wxCommandEvent& event);
 	void OnDisplay(wxCommandEvent& event);
 	void OnBestSize(wxCommandEvent& WXUNUSED(event));
-	void OnOpenImage(wxCommandEvent& WXUNUSED(event));
+	void OnNewImage(wxCommandEvent& WXUNUSED(event));
+//	void OnOpenImage(wxCommandEvent& WXUNUSED(event));
 	void OnSaveImage(wxCommandEvent & WXUNUSED(event));
 	void OnWriteFile(wxCommandEvent & WXUNUSED(event));
 	void OnClose(wxCloseEvent& event);

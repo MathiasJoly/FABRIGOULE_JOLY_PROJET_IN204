@@ -32,7 +32,7 @@ LiseusePanel::~LiseusePanel()
 		delete imageRGB ;
 }
 
-void LiseusePanel::LoadImages(wxArrayString filesPaths) {
+void LiseusePanel::NewImages(wxArrayString filesPaths) {
 	nbPages = filesPaths.GetCount();
 	pagesVector.resize(nbPages);
 	files.vector.resize(nbPages);
@@ -71,7 +71,58 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
 }
+/*
+void LiseusePanel::OpenImages(std::string Nom) {
+	std::ifstream myFile;
+	myFile.open(Nom);
+	nbPages = 0;
+	pagesVector = {};
+	files.vector = {};
+	for( std::string line; getline( myFile, line ); )
+	{
+		wxString fileName = line;
+		wxString filePath = filePath.AfterLast('/');
+		File file = {.name = fileName, .path = filePath, .pageNumber = i};
+		files.vector.at(i) = file;
+	}
+	nbPages = filesPaths.GetCount();
+	for(unsigned int i=0; i<nbPages; i++) {
 
+
+		wxString filePath = filesPaths.Item(i);
+
+		File file = {.name = fileName, .path = filePath, .pageNumber = i};
+		files.vector.at(i) = file;
+		if ( !filePath.empty() ) {
+			if (imageRGB)
+				delete imageRGB;
+
+			// open image dialog box
+			imageRGB = new wxImage(filePath, wxBITMAP_TYPE_ANY, -1);
+			// ANY => can load many image formats
+			imageWidth = imageRGB->GetWidth();
+			imageHeight = imageRGB->GetHeight();
+			imageRGB->Rescale(pageWidth, pageHeight, wxIMAGE_QUALITY_BICUBIC);
+			wxImage tempImage = imageRGB->Copy();
+			pagesVector.at(i) = tempImage;
+
+			//update GUI
+			SetScrollbars(1,1,nbPages*pageWidth,pageHeight,0,0);
+			if (nbPages > 1)
+				SetSize(2*pageWidth, pageHeight);
+			else
+				SetSize(pageWidth, pageHeight);
+			GetParent()->SetClientSize(GetSize());
+			// update display
+			Refresh(false);
+		}
+	}
+	wxArrayString fileNames = {};
+	files.GetNames(&fileNames);
+	pagesOrderList->SetStrings(fileNames);
+	pagesOrderList->GetStrings(pagesArray);
+}
+*/
 void LiseusePanel::SaveImage(wxString filePath)
 {
 	bool b ;

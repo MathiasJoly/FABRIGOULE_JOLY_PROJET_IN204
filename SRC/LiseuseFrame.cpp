@@ -4,7 +4,8 @@
 #include "LiseuseFrame.h"
 
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
-	EVT_MENU(ID_LOAD,  LiseuseFrame::OnOpenImage)
+	EVT_MENU(ID_NEW,  LiseuseFrame::OnNewImage)
+//	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
 	EVT_MENU(ID_WRITE_FILE, LiseuseFrame::OnWriteFile)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
@@ -21,7 +22,8 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 {
 	wxMenu *menuFile = new wxMenu();
 
-	menuFile->Append(ID_OPEN, _T("&Open image..."));
+	menuFile->Append(ID_NEW, _T("&New image(s) ..."));
+//	menuFile->Append(ID_OPEN, _T("&Open image file ..."));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_WRITE_FILE, _T("&Write file..."));
@@ -87,7 +89,7 @@ void LiseuseFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
                   _T(APP_NAME), wxOK | wxICON_INFORMATION ) ;
 }
 
-void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
+void LiseuseFrame::OnNewImage(wxCommandEvent& WXUNUSED(event) )
 {
 	wxBitmap bitmap;
 
@@ -99,10 +101,25 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 			return; // the user changed idea
 
 	openFileDialog.GetPaths(filesPaths);
-	panel->LoadImages(filesPaths);
+	panel->NewImages(filesPaths);
 	imageLoaded = true;
 }
+/*
+void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
+{
+	wxBitmap bitmap;
 
+	wxFileDialog openFileDialog(this, _("Open .partition files"), "", "", "Partition files (*.partition)|*.partition", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return; // the user changed idea
+
+	wxString filePathWX = openFileDialog.GetPath();
+	std::string filePath = filePathWX.ToStdString();
+	panel->OpenImages(filePath);
+	imageLoaded = true;
+}
+*/
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
 //	char str[128] = "" ; // proposed file name
@@ -119,7 +136,7 @@ void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
 {
 	if(!imageLoaded)
 		return ;
-
+/*
 	wxTextEntryDialog dlg(this,_T("Choisissez un nom pour cette partition!"),_T("Liste des images :"));
 	if ( dlg.ShowModal() == wxID_OK )
 	{
@@ -128,6 +145,13 @@ void LiseuseFrame::OnWriteFile(wxCommandEvent& WXUNUSED(event))
 		std::string extension = ".partition";
 		panel->WriteFile(nom.append(suffixe));
 	};
+*/
+	wxString filePathWX = wxFileSelector(_T("Save image names in textfile as"),_T(""),_T(""),_T("*.txt"), _T("Partition files (*.partition)|*.partition"), wxFD_SAVE );
+	if ( !filePathWX.empty() )
+	{
+		std::string filePath = filePathWX.ToStdString();
+		panel->WriteFile(filePath) ;
+	}
 }
 
 void LiseuseFrame::OnBestSize(wxCommandEvent& WXUNUSED(event))
