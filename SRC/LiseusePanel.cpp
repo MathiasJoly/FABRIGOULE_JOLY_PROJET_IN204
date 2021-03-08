@@ -68,7 +68,6 @@ void LiseusePanel::LoadImages(wxArrayString filesPaths) {
 	}
 	wxArrayString fileNames = {};
 	files.GetNames(&fileNames);
-	std::cout << "check : " << fileNames.GetCount() <<"\n";
 	pagesOrderList->SetStrings(fileNames);
 	pagesOrderList->GetStrings(pagesArray);
 }
@@ -182,22 +181,31 @@ void LiseusePanel::OnRightClick(wxMouseEvent& event)
 			undo = (c_x >= a_x-3) && (c_x <= a_x + a_l*5) && (c_y >= a_y-12) && (c_y <= a_y+3);
 			i++;
 		}
+		wxSize tempSize(1,1);
+		wxPoint tempPoint(900,500);
+		wxString tempTitle("Input User");
+		wxString tempName("Frame Temporaire");
+		wxFrame tempFrame(this->GetParent(), wxID_ANY, tempTitle, tempPoint, tempSize, wxFRAME_SHAPED, tempName);
 		if (undo)
 		{
 			wxString s = annotations.at(i-1).note;
 			wxString *choices = new wxString();
-			wxSingleChoiceDialog dlg1(this,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
+			tempFrame.Show(true);
+			wxSingleChoiceDialog dlg1(&tempFrame,_T("Voulez-vous supprimmer cette annotation?"),s,0,choices);
 			if ( dlg1.ShowModal() == wxID_OK ) annotations.erase(annotations.begin()+i-1);
+			tempFrame.Close();
 		}
 		else
-		{
-			wxTextEntryDialog dlg2(this,_T("Ecrivez votre annotation!"),_T("Annotation :"));
+		{ 
+			tempFrame.Show(true);
+			wxTextEntryDialog dlg2(&tempFrame,_T("Ecrivez votre annotation!"),_T("Annotation :"));
 			if ( dlg2.ShowModal() == wxID_OK )
 			{
 				// We can be certain that this string contains letters only.
 				wxString value = dlg2.GetValue();
 				if (!value.IsSameAs("")) Annoter(value,*cursor);
 			};
+			tempFrame.Close();
 		};
 		Refresh();
 	};

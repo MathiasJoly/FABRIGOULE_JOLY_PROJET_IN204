@@ -73,16 +73,13 @@ struct Files {
 	void GetNames(wxArrayString* names) {
 	for (int i=0; i<vector.size(); i++) {
 		(*names).Add(vector[i].name);
-		std::cout << "check :" << vector[i].name << "\n";
 		};
 	}
 
-	wxArrayString GetPaths() {
-	wxArrayString paths = {};
+	void GetPaths(wxArrayString* paths) {
 	for (int i=0; i<vector.size(); i++) {
-		paths.Add(vector[i].name);
+		(*paths).Add(vector[i].path);
 		};
-	return paths;
 	}
 
 	void SetPageNumber(wxString fileName, int num) {
@@ -130,7 +127,7 @@ private:
   wxArrayString pagesArrayNew;
   Files files;
 
-
+  void SetPosition(const wxPoint& position);
   void UpdatePagesVector();
 	void OnPaint(wxPaintEvent &event);
   void OnPaint();
