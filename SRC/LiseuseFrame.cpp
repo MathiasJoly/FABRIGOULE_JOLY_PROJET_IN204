@@ -5,7 +5,7 @@
 
 BEGIN_EVENT_TABLE(LiseuseFrame, wxFrame)
 	EVT_MENU(ID_NEW,  LiseuseFrame::OnNewImage)
-//	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpenImage)
+	EVT_MENU(ID_OPEN, LiseuseFrame::OnOpenImage)
 	EVT_MENU(ID_SAVE,  LiseuseFrame::OnSaveImage)
 	EVT_MENU(ID_WRITE_FILE, LiseuseFrame::OnWriteFile)
 	EVT_MENU(ID_QUIT,  LiseuseFrame::OnQuit)
@@ -23,7 +23,7 @@ LiseuseFrame::LiseuseFrame(const wxString& title, const wxPoint& pos, const wxSi
 	wxMenu *menuFile = new wxMenu();
 
 	menuFile->Append(ID_NEW, _T("&New image(s) ..."));
-//	menuFile->Append(ID_OPEN, _T("&Open image file ..."));
+	menuFile->Append(ID_OPEN, _T("&Open image file ..."));
 	menuFile->Append(ID_SAVE, _T("&Save image as..."));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_WRITE_FILE, _T("&Write file..."));
@@ -104,7 +104,7 @@ void LiseuseFrame::OnNewImage(wxCommandEvent& WXUNUSED(event) )
 	panel->NewImages(filesPaths);
 	imageLoaded = true;
 }
-/*
+
 void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 {
 	wxBitmap bitmap;
@@ -119,7 +119,7 @@ void LiseuseFrame::OnOpenImage(wxCommandEvent& WXUNUSED(event) )
 	panel->OpenImages(filePath);
 	imageLoaded = true;
 }
-*/
+
 void LiseuseFrame::OnSaveImage(wxCommandEvent & WXUNUSED(event))
 {
 //	char str[128] = "" ; // proposed file name

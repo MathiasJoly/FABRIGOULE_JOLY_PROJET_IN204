@@ -102,7 +102,7 @@ public:
     LiseusePanel( wxWindow *parent, wxWindowID, const wxPoint &pos, const wxSize &size ) ;
     ~LiseusePanel() ;
   	void NewImages(wxArrayString filesPaths);
-//	void OpenFile(wxString filePath);
+	void OpenImages(std::string Nom);
 	void SaveImage(wxString filePath) ;
 	void BestSize() ;
 	void Annoter(wxString note, wxPoint pt) ;
